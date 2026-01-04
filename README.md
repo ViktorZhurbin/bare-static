@@ -31,6 +31,7 @@ Then open http://localhost:3000 in your browser.
 /
 ├── content/          # Your .md files go here
 ├── dist/            # Generated .html files
+├── template.html    # HTML template with {{title}} and {{content}} placeholders
 ├── build.js         # Converts markdown to HTML
 ├── server.js        # Dev server with file watcher
 └── package.json     # Just one dependency: marked
@@ -55,17 +56,22 @@ Run `npm run build` to generate HTML files, then deploy the `dist/` folder to an
 
 ## How It Works
 
-**build.js** (~70 lines):
-- Reads all `.md` files from `content/`
+**template.html**:
+- HTML template with `{{title}}` and `{{content}}` placeholders
+- Easy to customize - just edit the HTML file
+- Includes basic styling for clean typography
+
+**build.js** (~20 lines):
+- Reads `template.html` and all `.md` files from `content/`
 - Converts markdown to HTML using `marked`
-- Wraps HTML in a template with basic styles
+- Replaces placeholders in template
 - Writes files to `dist/`
 
-**server.js** (~80 lines):
+**server.js** (~40 lines):
 - Runs the build process
 - Watches `content/` for changes
 - Serves files from `dist/` via HTTP
-- Provides live reload via polling
+- Injects live reload script and provides polling endpoint
 
 ## Why So Minimal?
 

@@ -4,57 +4,16 @@ import path from 'path';
 
 const CONTENT_DIR = './content';
 const OUTPUT_DIR = './dist';
+const TEMPLATE_FILE = './template.html';
+
+// Read template once
+const template = fs.readFileSync(TEMPLATE_FILE, 'utf-8');
 
 // HTML template wrapper
 function htmlTemplate(title, content) {
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${title}</title>
-  <style>
-    body {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      line-height: 1.6;
-      color: #333;
-    }
-    code {
-      background: #f4f4f4;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-size: 0.9em;
-    }
-    pre {
-      background: #f4f4f4;
-      padding: 15px;
-      border-radius: 5px;
-      overflow-x: auto;
-    }
-    pre code {
-      padding: 0;
-    }
-    blockquote {
-      border-left: 4px solid #ddd;
-      margin: 0;
-      padding-left: 20px;
-      color: #666;
-    }
-    img {
-      max-width: 100%;
-    }
-    a {
-      color: #0066cc;
-    }
-  </style>
-</head>
-<body>
-  ${content}
-</body>
-</html>`;
+  return template
+    .replace('{{title}}', title)
+    .replace('{{content}}', content);
 }
 
 // Build function
