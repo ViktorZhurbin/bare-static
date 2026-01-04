@@ -9,7 +9,14 @@ const PORT = 3000;
 
 
 // Read live reload script and wrap in <script> tag
-const liveReloadJs = fs.readFileSync(LIVE_RELOAD_SCRIPT, 'utf-8');
+let liveReloadJs;
+try {
+  liveReloadJs = fs.readFileSync(LIVE_RELOAD_SCRIPT, 'utf-8');
+} catch (err) {
+  console.error(`Failed to read live reload script: ${LIVE_RELOAD_SCRIPT}`);
+  console.error(err.message);
+  process.exit(1);
+}
 const liveReloadScript = `<script>\n${liveReloadJs}\n</script>`;
 
 // Initial build
@@ -21,15 +28,26 @@ console.log(`Server at ${ColorLog.cyan(`http://localhost:${PORT}`)}`);
 
 // Watch for changes
 let lastModified = Date.now();
-fs.watch(CONTENT_DIR, (eventType, filename) => {
-  if (filename && filename.endsWith('.md')) {
-    console.log(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
+let watcher;
+try {
+  watcher = fs.watch(CONTENT_DIR, (eventType, filename) => {
+    if (filename && filename.endsWith('.md')) {
+      console.log(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
 
-    buildAll({ injectScript: liveReloadScript });
+      buildAll({ injectScript: liveReloadScript });
 
-    lastModified = Date.now();
-  }
-});
+      lastModified = Date.now();
+    }
+  });
+
+  watcher.on('error', (err) => {
+    console.error(ColorLog.yellow(`Watch error: ${err.message}`));
+  });
+} catch (err) {
+  console.error(`Failed to watch directory: ${CONTENT_DIR}`);
+  console.error(err.message);
+  process.exit(1);
+}
 
 // HTTP server
 const server = http.createServer((req, res) => {
@@ -55,4 +73,20 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT);
+server.listen(PORT, (err) => {
+  if (err) {
+    console.error(`Failed to start server on port ${PORT}`);
+    console.error(err.message);
+    process.exit(1);
+  }
+});
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(ColorLog.yellow(`Port ${PORT} is already in use`));
+    console.error('Try stopping other servers or use a different port');
+  } else {
+    console.error(`Server error: ${err.message}`);
+  }
+  process.exit(1);
+});

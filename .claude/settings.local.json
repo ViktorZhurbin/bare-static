@@ -1,9 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git -C /Users/viktor/code/micro-blog log --oneline -10)",
-      "Bash(git -C /Users/viktor/code/micro-blog diff HEAD~3..HEAD --name-only)",
-      "Bash(git -C /Users/viktor/code/micro-blog diff HEAD~1 HEAD)"
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(npm run build:*)"
     ]
   }
 }
