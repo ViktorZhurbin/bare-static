@@ -30,12 +30,14 @@ Then open http://localhost:3000 in your browser.
 ```
 /
 ├── content/          # Your .md files go here
-├── scripts/          # Client-side JavaScript files
-│   └── live-reload.js
+├── scripts/          # Build and dev scripts
+│   ├── build.js      # Production build script
+│   ├── server.js     # Dev server with live reload
+│   └── live-reload.js # Client-side live reload script
+├── lib/              # Shared build utilities
+│   └── builder.js    # Reusable build logic
 ├── dist/            # Generated .html files
-├── template.html    # HTML template with {{title}} and {{content}} placeholders
-├── build.js         # Converts markdown to HTML
-├── server.js        # Dev server with file watcher
+├── template.html    # HTML template with placeholders
 └── package.json     # Just one dependency: marked
 ```
 
@@ -63,17 +65,22 @@ Run `npm run build` to generate HTML files, then deploy the `dist/` folder to an
 - Easy to customize - just edit the HTML file
 - Includes basic styling for clean typography
 
-**build.js** (~20 lines):
-- Reads `template.html` and all `.md` files from `content/`
-- Converts markdown to HTML using `marked`
-- Replaces placeholders in template
-- Writes files to `dist/`
+**lib/builder.js** (~75 lines):
+- Shared build logic used by both build and dev scripts
+- Reads template and converts markdown to HTML
+- Supports optional script injection (for live reload)
+- Exports reusable `buildAll()` and `generateHtml()` functions
 
-**server.js** (~40 lines):
-- Runs the build process
-- Watches `content/` for changes
+**scripts/build.js** (~4 lines):
+- Simple production build script
+- Imports and calls `buildAll()` from lib/builder.js
+- Generates static HTML files without live reload
+
+**scripts/server.js** (~55 lines):
+- Dev server with file watching and live reload
+- Uses `buildAll()` with live reload script injection
+- Watches `content/` for changes and rebuilds automatically
 - Serves files from `dist/` via HTTP
-- Reads `scripts/live-reload.js` and injects it into HTML
 - Provides `/reload-check` endpoint for live reload polling
 
 **scripts/live-reload.js**:

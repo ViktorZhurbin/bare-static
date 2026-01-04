@@ -1,50 +1,18 @@
-import { marked } from 'marked';
+import { buildAll, CONTENT_DIR, OUTPUT_DIR } from '../lib/builder.js';
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
-const CONTENT_DIR = './content';
-const OUTPUT_DIR = './dist';
-const TEMPLATE_FILE = './template.html';
 const LIVE_RELOAD_SCRIPT = './scripts/live-reload.js';
 const PORT = 3000;
 
-// Read template and live reload script once
-const template = fs.readFileSync(TEMPLATE_FILE, 'utf-8');
+// Read live reload script and wrap in <script> tag
 const liveReloadJs = fs.readFileSync(LIVE_RELOAD_SCRIPT, 'utf-8');
 const liveReloadScript = `<script>\n${liveReloadJs}\n</script>`;
 
-// HTML template wrapper with live reload
-function htmlTemplate(title, content) {
-  return template
-    .replace('{{title}}', title)
-    .replace('{{content}}', content)
-    .replace('</head>', `${liveReloadScript}\n</head>`);
-}
-
-// Build all markdown files
-function buildAll() {
-  if (!fs.existsSync(OUTPUT_DIR)) {
-    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-  }
-
-  const files = fs.readdirSync(CONTENT_DIR).filter(f => f.endsWith('.md'));
-
-  files.forEach(file => {
-    const markdown = fs.readFileSync(path.join(CONTENT_DIR, file), 'utf-8');
-    const html = marked(markdown);
-    const title = file.replace('.md', '');
-    const output = htmlTemplate(title, html);
-    const outputPath = path.join(OUTPUT_DIR, file.replace('.md', '.html'));
-    fs.writeFileSync(outputPath, output);
-  });
-
-  return files.length;
-}
-
 // Initial build
 console.log('Building site...');
-const count = buildAll();
+const count = buildAll({ injectScript: liveReloadScript });
 console.log(`Built ${count} page(s)`);
 
 // Watch for changes
@@ -52,7 +20,7 @@ let lastModified = Date.now();
 fs.watch(CONTENT_DIR, (eventType, filename) => {
   if (filename && filename.endsWith('.md')) {
     console.log(`Change detected: ${filename}`);
-    buildAll();
+    buildAll({ injectScript: liveReloadScript });
     lastModified = Date.now();
     console.log('Rebuilt!');
   }
