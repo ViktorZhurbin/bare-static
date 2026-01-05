@@ -64,8 +64,7 @@ Then open http://localhost:3000 in your browser.
 │   ├── server.js     # Dev server with live reload
 │   ├── live-reload.js # Client-side SSE live reload
 │   └── lib/              # Shared build utilities
-│        ├── builder.js    # Async build logic with parallel processing
-│        └── colorLog.js   # Console color formatting utility
+│        └── builder.js    # Async build logic with parallel processing
 ├── dist/             # Generated .html files
 ├── template.html     # HTML template with placeholders
 └── package.json      # Just one dependency: marked

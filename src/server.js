@@ -2,13 +2,13 @@ import { EventEmitter } from "node:events";
 import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
+import { styleText } from "node:util";
 import {
 	buildAll,
 	buildSingle,
 	CONTENT_DIR,
 	OUTPUT_DIR,
 } from "./lib/builder.js";
-import { ColorLog } from "./lib/colorLog.js";
 
 const LIVE_RELOAD_SCRIPT = "./src/live-reload.js";
 const PORT = 3000;
@@ -33,12 +33,14 @@ const liveReloadScript = `<script>\n${liveReloadJs}\n</script>`;
 await buildAll({ injectScript: liveReloadScript });
 
 console.info("Watching...");
-console.info(`Server at ${ColorLog.cyan(`http://localhost:${PORT}`)}`);
+console.info(`Server at ${styleText("cyan", `http://localhost:${PORT}`)}`);
 
 // NOTE: No defensive error handling - fails fast if CONTENT_DIR missing
 const watcher = fs.watch(CONTENT_DIR, async (_, filename) => {
 	if (filename?.endsWith(".md")) {
-		console.info(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
+		console.info(
+			`${styleText("gray", "File changed:")} ${CONTENT_DIR}/${filename}`,
+		);
 		await buildSingle(filename, {
 			injectScript: liveReloadScript,
 			logOnSuccess: true,

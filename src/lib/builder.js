@@ -1,8 +1,8 @@
 import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
+import { styleText } from "node:util";
 import { marked } from "marked";
-import { ColorLog } from "./colorLog.js";
 
 // Shared constants
 export const CONTENT_DIR = "./content";
@@ -52,7 +52,7 @@ export async function buildSingle(mdFileName, options = {}) {
 	try {
 		if (logOnStart) {
 			console.info(
-				`Writing ${OUTPUT_DIR}/${htmlFileName} ${ColorLog.dim(`from ${CONTENT_DIR}/${mdFileName}`)}`,
+				`Writing ${OUTPUT_DIR}/${htmlFileName} ${styleText("gray", `from ${CONTENT_DIR}/${mdFileName}`)}`,
 			);
 		}
 
@@ -68,12 +68,12 @@ export async function buildSingle(mdFileName, options = {}) {
 
 		if (logOnSuccess) {
 			const buildTime = formatMs(performance.now() - startTime);
-			console.info(ColorLog.green(`Wrote ${htmlFileName} in ${buildTime}`));
+			console.info(styleText("green", `Wrote ${htmlFileName} in ${buildTime}`));
 		}
 		return true;
 	} catch (err) {
 		console.error(
-			`${ColorLog.dim("Failed to build")} ${mdFileName}`,
+			`${styleText("gray", "Failed to build")} ${mdFileName}`,
 			err.message,
 		);
 		return false;
@@ -129,12 +129,13 @@ export async function buildAll(options = {}) {
 
 	const buildTime = formatMs(performance.now() - startTime);
 
-	const successMessage = ColorLog.green(
+	const successMessage = styleText(
+		"green",
 		`Wrote ${successCount} files in ${buildTime}`,
 	);
 	if (failCount > 0) {
 		console.info(
-			`${successMessage} ${ColorLog.yellow(`(${failCount} failed)`)}`,
+			`${successMessage} ${styleText("yellow", `(${failCount} failed)`)}`,
 		);
 	} else {
 		console.info(successMessage);
