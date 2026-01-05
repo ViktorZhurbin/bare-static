@@ -10,7 +10,7 @@
 		"build": "node src/build.js",
 		"dev": "node src/server.js",
 		"format": "biome format --write",
-		"loc": "git ls-files 'src/*' | xargs wc -l"
+		"loc": "find src -type f | xargs wc -l"
 	},
 	"dependencies": {
 		"marked": "^12.0.0",
