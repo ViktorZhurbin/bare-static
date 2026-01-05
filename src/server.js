@@ -2,15 +2,14 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import { EventEmitter } from 'events';
-import {ColorLog} from '../lib/colorLog.js';
-import { buildAll, buildSingle, CONTENT_DIR, OUTPUT_DIR } from '../lib/builder.js';
+import {ColorLog} from './lib/colorLog.js';
+import { buildAll, buildSingle, CONTENT_DIR, OUTPUT_DIR } from './lib/builder.js';
 
-const LIVE_RELOAD_SCRIPT = './scripts/live-reload.js';
+const LIVE_RELOAD_SCRIPT = './src/live-reload.js';
 const PORT = 3000;
 
 // Event emitter for live reload notifications
 const reloadEmitter = new EventEmitter();
-reloadEmitter.setMaxListeners(100); // Prevent warnings with 10+ connected tabs
 
 
 // Read live reload script and wrap in <script> tag
@@ -32,27 +31,18 @@ console.log(`Server at ${ColorLog.cyan(`http://localhost:${PORT}`)}`);
 
 
 // Watch for changes
-let watcher;
-try {
-  watcher = fs.watch(CONTENT_DIR, async (eventType, filename) => {
-    if (filename && filename.endsWith('.md')) {
-      console.log(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
+// NOTE: No defensive error handling - fails fast if CONTENT_DIR missing
+const watcher = fs.watch(CONTENT_DIR, async (eventType, filename) => {
+  if (filename && filename.endsWith('.md')) {
+    console.log(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
+    await buildSingle(filename, { injectScript: liveReloadScript, logOnSuccess: true });
+    reloadEmitter.emit('reload');
+  }
+});
 
-      await buildSingle(filename, { injectScript: liveReloadScript, logOnSuccess: true });
-
-      // Notify all connected SSE clients
-      reloadEmitter.emit('reload');
-    }
-  });
-
-  watcher.on('error', (err) => {
-    console.error(ColorLog.yellow(`Watch error: ${err.message}`));
-  });
-} catch (err) {
-  console.error(`Failed to watch directory: ${CONTENT_DIR}`);
-  console.error(err.message);
-  process.exit(1);
-}
+watcher.on('error', (err) => {
+  console.error(ColorLog.yellow(`Watch error: ${err.message}`));
+});
 
 // HTTP server
 const server = http.createServer((req, res) => {
@@ -62,15 +52,6 @@ const server = http.createServer((req, res) => {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache'
     });
-
-    // Send keepalive ping every 30 seconds to prevent connection timeout
-    const keepAlive = setInterval(() => {
-      try {
-        res.write(': ping\n\n');
-      } catch (e) {
-        clearInterval(keepAlive);
-      }
-    }, 30000);
 
     // Listen for reload events and notify client
     const onReload = () => {
@@ -84,7 +65,6 @@ const server = http.createServer((req, res) => {
 
     // Cleanup on client disconnect
     req.on('close', () => {
-      clearInterval(keepAlive);
       reloadEmitter.off('reload', onReload);
     });
 
@@ -106,20 +86,10 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, (err) => {
-  if (err) {
-    console.error(`Failed to start server on port ${PORT}`);
-    console.error(err.message);
-    process.exit(1);
-  }
-});
+// NOTE: Minimal error handling - let failures be visible
+server.listen(PORT);
 
 server.on('error', (err) => {
-  if (err.code === 'EADDRINUSE') {
-    console.error(ColorLog.yellow(`Port ${PORT} is already in use`));
-    console.error('Try stopping other servers or use a different port');
-  } else {
-    console.error(`Server error: ${err.message}`);
-  }
+  console.error(ColorLog.yellow(`Server error: ${err.message}`));
   process.exit(1);
 });

@@ -1,13 +1,42 @@
 # Micro Blog
 
-A minimal markdown-to-HTML blog generator with only 1 dependency.
+A minimal markdown-to-HTML blog generator that happens to work.
+
+## Philosophy & Constraints
+
+This project explores the **minimum** needed for a static site generator. It's an exercise in simplicity.
+
+### Core Principles
+
+**What We Optimize For:**
+- Minimal dependencies
+- Good DX
+- Keep it small and readable
+- Simple mental model (.md > .html)
+
+**What We Explicitly Don't Care About:**
+- Edge case handling
+- Production-grade error recovery
+- Perfect developer ergonomics
+- Enterprise features
+
+### Rules to Stay Minimal
+
+1. **Avoid new dependencies**
+2. **No defensive programming** - let it fail visibly when misconfigured
+3. **No features "for later"** - solve real problems, not hypothetical ones
+4. **Prefer simple over clever** - avoid abstractions until pain is clear
+5. **Document assumptions** instead of handling edge cases
+
+**Bloat detection:** If the codebase grows beyond ~250 lines of actual code, something went wrong.
+
+This isn't a framework. It's a learning tool that happens to work.
 
 ## Features
 
 - ✓ Converts markdown files to HTML
 - ✓ Dev server with live reload
-- ✓ Only 1 npm dependency (`marked`)
-- ✓ ~150 lines of code total
+- ✓ Only 1 npm dependency (`marked`) so far
 - ✓ Built with Node.js built-ins
 
 ## Quick Start
@@ -30,15 +59,16 @@ Then open http://localhost:3000 in your browser.
 ```
 /
 ├── content/          # Your .md files go here
-├── scripts/          # Build and dev scripts
+├── src/          # Build and dev scripts
 │   ├── build.js      # Production build script
 │   ├── server.js     # Dev server with live reload
-│   └── live-reload.js # Client-side live reload script
-├── lib/              # Shared build utilities
-│   └── builder.js    # Reusable build logic
-├── dist/            # Generated .html files
-├── template.html    # HTML template with placeholders
-└── package.json     # Just one dependency: marked
+│   ├── live-reload.js # Client-side SSE live reload
+│   └── lib/              # Shared build utilities
+│        ├── builder.js    # Async build logic with parallel processing
+│        └── colorLog.js   # Console color formatting utility
+├── dist/             # Generated .html files
+├── template.html     # HTML template with placeholders
+└── package.json      # Just one dependency: marked
 ```
 
 ## Usage
@@ -46,13 +76,12 @@ Then open http://localhost:3000 in your browser.
 ### Writing Posts
 
 1. Create a `.md` file in the `content/` folder
-2. Write your content in markdown
-3. Run `npm run build` or `npm run dev`
-4. Find your HTML in `dist/`
+2. Run `npm run build` or `npm run dev`
+3. Find your HTML in `dist/`
 
 ### Development
 
-The dev server watches for changes in `content/` and automatically rebuilds. The browser will reload when changes are detected.
+The dev server watches for changes in `content/` and automatically rebuilds.
 
 ### Production
 
@@ -62,32 +91,19 @@ Run `npm run build` to generate HTML files, then deploy the `dist/` folder to an
 
 **template.html**:
 - HTML template with `{{title}}` and `{{content}}` placeholders
-- Easy to customize - just edit the HTML file
 - Includes basic styling for clean typography
 
-**lib/builder.js** (~75 lines):
-- Shared build logic used by both build and dev scripts
-- Reads template and converts markdown to HTML
-- Supports optional script injection (for live reload)
-- Exports reusable `buildAll()` and `generateHtml()` functions
+**lib/builder.js** (~130 lines):
+- Async build logic with parallel file processing
 
-**scripts/build.js** (~4 lines):
-- Simple production build script
-- Imports and calls `buildAll()` from lib/builder.js
-- Generates static HTML files without live reload
-
-**scripts/server.js** (~55 lines):
-- Dev server with file watching and live reload
-- Uses `buildAll()` with live reload script injection
-- Watches `content/` for changes and rebuilds automatically
+**scripts/server.js** (~95 lines):
+- Dev server with file watching and Server-Sent Events (SSE)
+- Watches `content/` and rebuilds only the changed file
+- SSE endpoint at `/events` pushes reload notifications to browser
+- EventEmitter broadcasts to all connected browser tabs
 - Serves files from `dist/` via HTTP
-- Provides `/reload-check` endpoint for live reload polling
 
-**scripts/live-reload.js**:
-- Client-side script for browser live reload
-- Polls server every 2 seconds for changes
-- Automatically reloads page when content updates
-
-## Why So Minimal?
-
-This project demonstrates that you don't need complex frameworks or build tools to create a static site generator. Just Node.js built-ins and one tiny dependency.
+**scripts/live-reload.js** (~10 lines):
+- Client-side script using EventSource API
+- Connects to `/events` endpoint for real-time updates
+- Automatically reloads page when server pushes 'reload' event

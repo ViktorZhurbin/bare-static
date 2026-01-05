@@ -10,6 +10,7 @@ export const OUTPUT_DIR = './dist';
 export const TEMPLATE_FILE = './template.html';
 
 // Read template once at module load
+// NOTE: Defensive - could simplify to: const template = fs.readFileSync(...)
 let template;
 try {
   template = fs.readFileSync(TEMPLATE_FILE, 'utf-8');
@@ -20,10 +21,9 @@ try {
 }
 
 /**
- * Generate HTML from template with optional script injection
- * @param {string} title - Page title
- * @param {string} content - HTML content
- * @param {string} injectScript - Optional script to inject before </head>
+ * @param {string} title
+ * @param {string} content
+ * @param {string} [injectScript]
  */
 function generateHtml(title, content, injectScript = '') {
   let html = template
@@ -38,13 +38,9 @@ function generateHtml(title, content, injectScript = '') {
 }
 
 /**
- * Build a single markdown file to HTML
- * @param {string} mdFileName - The markdown filename (e.g., 'post.md')
- * @param {Object} options - Build options
- * @param {string} options.injectScript - Optional script to inject
- * @param {boolean} options.logOnSuccess - Whether to log when build started
- * @param {boolean} options.logOnStart - Whether to log when build succeeded
- * @returns {Promise<boolean>} - True if build succeeded, false otherwise
+ * @param {string} mdFileName
+ * @param {{injectScript?: string, logOnSuccess?: boolean, logOnStart?: boolean}} [options]
+ * @returns {Promise<boolean>}
  */
 export async function buildSingle(mdFileName, options = {}) {
   const { injectScript = '', logOnSuccess, logOnStart } = options;
@@ -77,16 +73,14 @@ export async function buildSingle(mdFileName, options = {}) {
 }
 
 /**
- * Build all markdown files to HTML
- * @param {Object} options - Build options
- * @param {string} options.injectScript - Optional script to inject
- * @param {boolean} options.verbose - Whether to log build progress
+ * @param {{injectScript?: string, verbose?: boolean}} [options]
  */
 export async function buildAll(options = {}) {
   const { injectScript = '', verbose = false } = options;
   const startTime = performance.now();
 
   // Create output directory if it doesn't exist
+  // NOTE: Defensive - directory creation rarely fails in practice
   try {
     await fsPromises.mkdir(OUTPUT_DIR, { recursive: true });
   } catch (err) {

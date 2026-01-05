@@ -7,8 +7,10 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "build": "node scripts/build.js",
-    "dev": "node scripts/server.js"
+    "build": "node src/build.js",
+    "dev": "node src/server.js",
+    "format": "biome format --write",
+    "loc": "git ls-files 'src/*' | xargs wc -l"
   },
   "dependencies": {
     "marked": "^12.0.0"
