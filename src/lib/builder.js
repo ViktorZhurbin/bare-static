@@ -11,13 +11,7 @@ export const TEMPLATE_FILE = "./template.html";
 const formatMs = (ms) => `${Math.round(ms)}ms`;
 
 // Read template once at module load
-let template;
-try {
-	template = await fsPromises.readFile(TEMPLATE_FILE, "utf-8");
-} catch (err) {
-	console.error(`Failed to read template file: ${TEMPLATE_FILE}`, err.message);
-	process.exit(1);
-}
+const template = await fsPromises.readFile(TEMPLATE_FILE, "utf-8");
 
 /**
  * @param {string} title
@@ -87,15 +81,7 @@ export async function buildAll(options = {}) {
 	const startTime = performance.now();
 
 	// Create output directory if it doesn't exist
-	try {
-		await fsPromises.mkdir(OUTPUT_DIR, { recursive: true });
-	} catch (err) {
-		console.error(
-			`Failed to create output directory: ${OUTPUT_DIR}`,
-			err.message,
-		);
-		process.exit(1);
-	}
+	await fsPromises.mkdir(OUTPUT_DIR, { recursive: true });
 
 	// Read all .md files and build them in parallel
 	const buildPromises = await Array.fromAsync(
