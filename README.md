@@ -28,7 +28,7 @@ This project explores the **minimum** needed for a static site generator. It's a
 4. **Prefer simple over clever** - avoid abstractions until pain is clear
 5. **Document assumptions** instead of handling edge cases
 
-**Bloat detection:** If the codebase grows beyond ~250 lines of actual code, something went wrong.
+**Bloat detection:** If the codebase grows beyond ~250 lines of actual code (`npm run loc`), something went wrong.
 
 This isn't a framework. It's a learning tool that happens to work.
 
