@@ -1,21 +1,21 @@
 {
-  "name": "micro-blog",
-  "version": "1.0.0",
-  "description": "Minimal markdown to HTML blog generator",
-  "type": "module",
-  "engines": {
-    "node": ">=24.0.0"
-  },
-  "scripts": {
-    "build": "node src/build.js",
-    "dev": "node src/server.js",
-    "format": "biome format --write",
-    "loc": "git ls-files 'src/*' | xargs wc -l"
-  },
-  "dependencies": {
-    "marked": "^12.0.0"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "2.3.11"
-  }
+	"name": "micro-blog",
+	"version": "1.0.0",
+	"description": "Minimal markdown to HTML blog generator",
+	"type": "module",
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"scripts": {
+		"build": "node src/build.js",
+		"dev": "node src/server.js",
+		"format": "biome format --write",
+		"loc": "git ls-files 'src/*' | xargs wc -l"
+	},
+	"dependencies": {
+		"marked": "^12.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.11"
+	}
 }
