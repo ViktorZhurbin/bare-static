@@ -25,7 +25,7 @@ try {
 const liveReloadScript = `<script>\n${liveReloadJs}\n</script>`;
 
 // Initial build
-buildAll({ injectScript: liveReloadScript });
+await buildAll({ injectScript: liveReloadScript });
 
 console.log("Watching...")
 console.log(`Server at ${ColorLog.cyan(`http://localhost:${PORT}`)}`);
@@ -34,11 +34,11 @@ console.log(`Server at ${ColorLog.cyan(`http://localhost:${PORT}`)}`);
 // Watch for changes
 let watcher;
 try {
-  watcher = fs.watch(CONTENT_DIR, (eventType, filename) => {
+  watcher = fs.watch(CONTENT_DIR, async (eventType, filename) => {
     if (filename && filename.endsWith('.md')) {
       console.log(`${ColorLog.dim("File changed:")} ${CONTENT_DIR}/${filename}`);
 
-      buildSingle(filename, { injectScript: liveReloadScript, logOnSuccess: true });
+      await buildSingle(filename, { injectScript: liveReloadScript, logOnSuccess: true });
 
       // Notify all connected SSE clients
       reloadEmitter.emit('reload');
