@@ -1,6 +1,8 @@
-# Welcome to My Micro Blog
+# Welcome to Bare Static
 
-This is a minimal, dependency-light blog built with **Node.js** and a single npm package: `marked`.
+A minimal markdown-to-HTML generator that happens to work.
+
+Exploring what it takes to build a minimal static site generator tool. Ended up with roughly 150 LOC of actual logic.
 
 ## Recent Posts
 
@@ -9,56 +11,41 @@ Check out these articles:
 - [Getting Started with Modern JavaScript](getting-started-with-javascript.html)
 - [Understanding CSS Grid Layout](understanding-css-grid.html)
 
-## About This Blog
-
-This blog demonstrates how simple it can be to create a static site generator. No complex frameworks, no heavy dependencies—just:
-
-1. Markdown files
-2. A build script
-3. A dev server with live reload
-
-### Technology Stack
-
-| Component | Technology |
-|-----------|-----------|
-| Content | Markdown |
-| Parser | marked |
-| Server | Node.js http |
-| Styling | Vanilla CSS |
-
-## Why Minimal?
-
-> Simplicity is the ultimate sophistication.
-> — Leonardo da Vinci
-
-The modern web development ecosystem can be overwhelming with countless tools, frameworks, and build processes. Sometimes, going back to basics helps us understand what we really need.
-
-### Benefits of This Approach
-
-- **Fast**: No complex build pipelines
-- **Understandable**: ~150 lines of code total
-- **Maintainable**: Fewer dependencies mean fewer updates
-- **Educational**: Learn how static site generators work
-
-## Getting Started
-
-To run this blog locally:
-
-```bash
-npm install
-npm run dev
-```
-
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## Features
 
-- ✓ Markdown to HTML conversion
-- ✓ Live reload during development
-- ✓ Clean, readable design
-- ✓ Code syntax highlighting
-- ✓ Responsive layout
+✓ Converts markdown files to HTML
 
----
+✓ Dev server with live reload
 
-*Built with care, minimal dependencies, and a love for simplicity.*
+
+## Quick Start
+Install: `npm i @vktrz/bare-static`
+
+Add scripts to `package.json`:
+```json
+"scripts": {
+    "dev": "bare-static",
+    "build": "bare-static build"
+}
+```
+
+## Requirements
+
+At the root of the project, add `content/` folder with `.md` files, and a `template.html` with `{{title}}` and `{{content}}` placeholders.
+
+Example: https://github.com/ViktorZhurbin/bare-static/tree/main/packages/website
+
+## How It Works
+
+**builder.js**:
+- Async build logic with parallel file processing
+
+**dev.js**:
+- Dev server serving static files
+- Watches `content/`, rebuilds and reloads page on file change
+
+**live-reload.js**:
+- Client-side script for live reload in dev mode
+- Connects to `/events` endpoint of dev server for real-time updates
+- Automatically reloads page when server pushes 'reload' event

@@ -1,4 +1,4 @@
-# Micro Blog
+# Bare Static
 
 A minimal markdown-to-HTML generator that happens to work.
 

@@ -1,6 +1,6 @@
 {
 	"name": "@vktrz/bare-static",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "Minimal markdown to HTML static site generator",
 	"repository": {
 		"type": "git",
