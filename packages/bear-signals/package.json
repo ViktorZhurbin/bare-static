@@ -1,7 +1,7 @@
 {
 	"name": "@vktrz/bear-signals",
 	"version": "0.0.1",
-	"description": "Educational implementation of signals inspired by Solid.js",
+	"description": "Primitive implementation of signals, inspired by Solid.js",
 	"type": "module",
 	"main": "./lib/index.js",
 	"exports": {
