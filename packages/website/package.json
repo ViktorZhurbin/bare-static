@@ -8,6 +8,7 @@
 		"build": "bare-static build"
 	},
 	"dependencies": {
-		"@vktrz/bare-static": "workspace:*"
+		"@vktrz/bare-static": "workspace:*",
+		"@vktrz/bare-islands": "workspace:*"
 	}
 }

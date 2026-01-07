@@ -2,7 +2,7 @@ import fsPromises from "node:fs/promises";
 import path from "node:path";
 import { styleText } from "node:util";
 import { marked } from "marked";
-import { copyStaticAssets } from "./static-assets.js";
+import { loadConfig } from "./config-loader.js";
 
 // Shared constants
 export const CONTENT_DIR = "./content";
@@ -13,6 +13,9 @@ const formatMs = (ms) => `${Math.round(ms)}ms`;
 
 // Read template once at module load
 const template = await fsPromises.readFile(TEMPLATE_FILE, "utf-8");
+
+// Load config once at module load
+const config = await loadConfig();
 
 /**
  * @param {string} title
@@ -75,24 +78,37 @@ export async function buildSingle(mdFileName, options = {}) {
 }
 
 /**
- * @param {{injectScript?: string, verbose?: boolean}} [options]
+ * @param {{injectScript?: string, verbose?: boolean, plugins?: Array}} [options]
  */
 export async function buildAll(options = {}) {
-	const { injectScript = "", verbose = false } = options;
+	const { injectScript = "", verbose = false, plugins = [] } = options;
 	const startTime = performance.now();
 
 	// Create output directory if it doesn't exist
 	await fsPromises.mkdir(OUTPUT_DIR, { recursive: true });
 
-	const componentScripts = await copyStaticAssets(OUTPUT_DIR);
+	// Merge plugins from config and options
+	const allPlugins = [...(config?.plugins || []), ...plugins];
+
+	// Run plugin hooks
+	let pluginScripts = [];
+	for (const plugin of allPlugins) {
+		if (plugin.onBuild) {
+			await plugin.onBuild({ outputDir: OUTPUT_DIR, contentDir: CONTENT_DIR });
+		}
+		if (plugin.getScripts) {
+			const scripts = await plugin.getScripts({ outputDir: OUTPUT_DIR });
+			pluginScripts.push(...scripts);
+		}
+	}
 
 	// Read all .md files and build them in parallel
 	const buildPromises = await Array.fromAsync(
 		fsPromises.glob(path.join(CONTENT_DIR, "*.md")),
 		(filePath) =>
 			buildSingle(path.basename(filePath), {
-				// Combine component scripts with any additional injected scripts (e.g., live reload)
-				injectScript: [...componentScripts, injectScript].filter(Boolean).join("\n"),
+				// Combine plugin scripts with any additional injected scripts (e.g., live reload)
+				injectScript: [...pluginScripts, injectScript].filter(Boolean).join("\n"),
 				logOnStart: verbose,
 			}),
 	);

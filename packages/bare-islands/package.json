@@ -1,0 +1,32 @@
+{
+	"name": "@vktrz/bare-islands",
+	"version": "1.0.0",
+	"description": "Plugin for bare-static that enables interactive islands architecture with web components",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ViktorZhurbin/bare-static.git",
+		"directory": "packages/bare-islands"
+	},
+	"type": "module",
+	"engines": {
+		"node": ">=24.0.0"
+	},
+	"main": "./lib/index.js",
+	"exports": {
+		".": "./lib/index.js"
+	},
+	"files": [
+		"lib/"
+	],
+	"keywords": [
+		"bare-static",
+		"plugin",
+		"islands",
+		"web-components",
+		"interactive",
+		"static-site-generator"
+	],
+	"peerDependencies": {
+		"@vktrz/bare-static": "^1.0.0"
+	}
+}

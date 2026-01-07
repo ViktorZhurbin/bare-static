@@ -16,7 +16,8 @@
       "Bash(mkdir:*)",
       "Bash(npm test:*)",
       "Bash(cp:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npm run loc:*)"
     ]
   }
 }
