@@ -77,3 +77,56 @@ function cleanup(effect) {
 	}
 	effect.dependencies.clear();
 }
+
+/**
+ * Creates a memoized computed value
+ * Only re-computes when dependencies change
+ *
+ * @param {Function} fn - The computation function
+ * @returns {Function} A getter function for the computed value
+ */
+export function createMemo(fn) {
+	let value;
+	const subscribers = new Set();
+
+	// The memo acts as an effect (has dependencies, re-runs)
+	const memo = {
+		dependencies: new Set(),
+		execute() {
+			// Cleanup old dependencies
+			cleanup(memo);
+
+			// Compute new value (this subscribes to signals)
+			listener = memo;
+			const newValue = fn();
+			listener = null;
+
+			// If value changed, notify subscribers
+			if (newValue !== value) {
+				value = newValue;
+				const subscribersSnapshot = [...subscribers];
+				for (const sub of subscribersSnapshot) {
+					sub.execute();
+				}
+			}
+		},
+	};
+
+	// Compute initial value
+	memo.execute();
+
+	// The memo also acts as a signal (can be read)
+	function read() {
+		// Subscribe current listener (if any)
+		if (listener) {
+			subscribers.add(listener);
+			listener.dependencies.add(read);
+		}
+		return value;
+	}
+
+	// Expose subscribers for cleanup
+	read.subscribers = subscribers;
+
+	return read;
+}
