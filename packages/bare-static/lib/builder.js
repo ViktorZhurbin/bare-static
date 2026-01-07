@@ -108,7 +108,9 @@ export async function buildAll(options = {}) {
 		(filePath) =>
 			buildSingle(path.basename(filePath), {
 				// Combine plugin scripts with any additional injected scripts (e.g., live reload)
-				injectScript: [...pluginScripts, injectScript].filter(Boolean).join("\n"),
+				injectScript: [...pluginScripts, injectScript]
+					.filter(Boolean)
+					.join("\n"),
 				logOnStart: verbose,
 			}),
 	);

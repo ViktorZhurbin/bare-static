@@ -1,14 +1,14 @@
-import { test } from 'node:test';
-import assert from 'node:assert';
-import { createSignal, createEffect, createMemo } from '../lib/index.js';
+import { test } from "node:test";
+import assert from "node:assert";
+import { createSignal, createEffect, createMemo } from "../lib/index.js";
 
-test('memo computes initial value', () => {
+test("memo computes initial value", () => {
 	const [count, setCount] = createSignal(5);
 	const doubled = createMemo(() => count() * 2);
 	assert.strictEqual(doubled(), 10);
 });
 
-test('memo caches value and does not recompute on multiple reads', () => {
+test("memo caches value and does not recompute on multiple reads", () => {
 	let computeCount = 0;
 	const [count, setCount] = createSignal(5);
 	const doubled = createMemo(() => {
@@ -24,7 +24,7 @@ test('memo caches value and does not recompute on multiple reads', () => {
 	assert.strictEqual(computeCount, 1); // Still only computed once
 });
 
-test('memo recomputes when dependency changes', () => {
+test("memo recomputes when dependency changes", () => {
 	let computeCount = 0;
 	const [count, setCount] = createSignal(5);
 	const doubled = createMemo(() => {
@@ -40,7 +40,7 @@ test('memo recomputes when dependency changes', () => {
 	assert.strictEqual(computeCount, 2); // Recomputed
 });
 
-test('memo can be used in effects', () => {
+test("memo can be used in effects", () => {
 	const [a, setA] = createSignal(2);
 	const [b, setB] = createSignal(3);
 	const sum = createMemo(() => a() + b());
@@ -59,7 +59,7 @@ test('memo can be used in effects', () => {
 	assert.strictEqual(effectValue, 12);
 });
 
-test('memos can be chained', () => {
+test("memos can be chained", () => {
 	let squaredCount = 0;
 	let plusTenCount = 0;
 
@@ -89,7 +89,7 @@ test('memos can be chained', () => {
 	assert.strictEqual(plusTenCount, 2);
 });
 
-test('memo only notifies subscribers if value actually changed', () => {
+test("memo only notifies subscribers if value actually changed", () => {
 	const [count, setCount] = createSignal(0);
 	const isEven = createMemo(() => count() % 2 === 0);
 	let effectRuns = 0;

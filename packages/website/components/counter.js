@@ -2,7 +2,7 @@
  * Interactive Counter Component
  * Demonstrates bare-signals reactivity in a web component
  */
-import { createSignal, createEffect } from '/vendor/bare-signals.js';
+import { createSignal, createEffect } from "/vendor/bare-signals.js";
 
 class CounterComponent extends HTMLElement {
 	connectedCallback() {
@@ -10,7 +10,7 @@ class CounterComponent extends HTMLElement {
 		const [count, setCount] = createSignal(0);
 
 		// Build DOM structure
-		const container = document.createElement('div');
+		const container = document.createElement("div");
 		container.style.cssText = `
 			border: 2px solid #4CAF50;
 			border-radius: 8px;
@@ -20,11 +20,11 @@ class CounterComponent extends HTMLElement {
 			background: #f9f9f9;
 		`;
 
-		const title = document.createElement('h3');
-		title.textContent = '🔢 Interactive Counter';
-		title.style.marginTop = '0';
+		const title = document.createElement("h3");
+		title.textContent = "🔢 Interactive Counter";
+		title.style.marginTop = "0";
 
-		const display = document.createElement('p');
+		const display = document.createElement("p");
 		display.style.cssText = `
 			font-size: 2em;
 			font-weight: bold;
@@ -32,12 +32,17 @@ class CounterComponent extends HTMLElement {
 			margin: 15px 0;
 		`;
 
-		const buttonContainer = document.createElement('div');
-		buttonContainer.style.cssText = 'display: flex; gap: 10px; justify-content: center;';
+		const buttonContainer = document.createElement("div");
+		buttonContainer.style.cssText =
+			"display: flex; gap: 10px; justify-content: center;";
 
-		const incrementBtn = this.createButton('+ Increment', () => setCount(count() + 1));
-		const decrementBtn = this.createButton('- Decrement', () => setCount(count() - 1));
-		const resetBtn = this.createButton('Reset', () => setCount(0));
+		const incrementBtn = this.createButton("+ Increment", () =>
+			setCount(count() + 1),
+		);
+		const decrementBtn = this.createButton("- Decrement", () =>
+			setCount(count() - 1),
+		);
+		const resetBtn = this.createButton("Reset", () => setCount(0));
 
 		// Reactive effect - updates display when count changes
 		createEffect(() => {
@@ -55,11 +60,11 @@ class CounterComponent extends HTMLElement {
 
 		this.appendChild(container);
 
-		console.log('✅ Counter component initialized with bare-signals');
+		console.log("✅ Counter component initialized with bare-signals");
 	}
 
 	createButton(text, onClick) {
-		const button = document.createElement('button');
+		const button = document.createElement("button");
 		button.textContent = text;
 		button.onclick = onClick;
 		button.style.cssText = `
@@ -72,10 +77,10 @@ class CounterComponent extends HTMLElement {
 			cursor: pointer;
 			transition: background 0.2s;
 		`;
-		button.onmouseover = () => button.style.background = '#45a049';
-		button.onmouseout = () => button.style.background = '#4CAF50';
+		button.onmouseover = () => (button.style.background = "#45a049");
+		button.onmouseout = () => (button.style.background = "#4CAF50");
 		return button;
 	}
 }
 
-customElements.define('counter-component', CounterComponent);
+customElements.define("counter-component", CounterComponent);
