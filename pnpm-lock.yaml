@@ -39,14 +39,14 @@ importers:
         specifier: ^3.0.2
         version: 3.0.2
 
-  packages/website:
+  website:
     dependencies:
       '@vktrz/bare-islands':
         specifier: workspace:*
-        version: link:../bare-islands
+        version: link:../packages/bare-islands
       '@vktrz/bare-static':
         specifier: workspace:*
-        version: link:../core
+        version: link:../packages/core
 
 packages:
 
