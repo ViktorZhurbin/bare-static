@@ -24,3 +24,11 @@ createEffect(() => {
 
 setCount(5); // Logs: "Count: 5, Doubled: 10"
 ```
+
+## Interactive Demo
+
+```bash
+npm run demo
+```
+
+Open `http://localhost:3000/demo` to see an interactive demo in your browser.

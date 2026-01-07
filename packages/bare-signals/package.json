@@ -8,11 +8,16 @@
 		".": "./lib/index.js"
 	},
 	"scripts": {
-		"test": "node --test tests/**/*.test.js"
+		"test": "node --test tests/**/*.test.js",
+		"demo": "node server.js"
 	},
 	"files": [
 		"lib/"
 	],
+	"devDependencies": {
+		"polka": "^0.5.2",
+		"sirv": "^3.0.2"
+	},
 	"keywords": [
 		"signals",
 		"reactivity",

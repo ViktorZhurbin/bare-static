@@ -12,6 +12,15 @@ importers:
         specifier: 2.3.11
         version: 2.3.11
 
+  packages/bare-signals:
+    devDependencies:
+      polka:
+        specifier: ^0.5.2
+        version: 0.5.2
+      sirv:
+        specifier: ^3.0.2
+        version: 3.0.2
+
   packages/bare-static:
     dependencies:
       marked:
@@ -23,8 +32,6 @@ importers:
       sirv:
         specifier: ^3.0.2
         version: 3.0.2
-
-  packages/bear-signals: {}
 
   packages/website:
     dependencies:

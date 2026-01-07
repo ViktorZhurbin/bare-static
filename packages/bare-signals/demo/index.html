@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bare Signals Demo</title>
+	<link rel="stylesheet" href="demo/style.css">
+</head>
+<body>
+	<h1>🐻 Bare Signals Demo</h1>
+	<p>Check Console to see the logs.</p>
+	<p>Inspect DevTools > Elements panel to see the code (check the <code>script</code> tag)</p>
+
+	<div class="demo">
+		<h3>Reactive vs Non-Reactive</h3>
+		<div class="output">
+			<span class="label">Regular JS variable:</span> <span id="regular">0</span>
+			<span style="color: #999; font-size: 12px;">(won't update automatically)</span>
+		</div>
+		<button id="increment-regular">Increment Regular</button>
+
+		<div class="output">
+			<span class="label">Signal (reactive):</span> <span id="signal">0</span>
+			<span style="color: #4CAF50; font-size: 12px;">(auto-updates!)</span>
+		</div>
+		<button id="increment-signal">Increment Signal</button>
+	</div>
+
+	<div class="demo">
+		<h3>Signal + Effect + Memo</h3>
+		<div class="output">
+			<span class="label">Count:</span> <span id="count">0</span>
+		</div>
+		<div class="output">
+			<span class="label">Doubled (memo):</span> <span id="memo">0</span>
+		</div>
+		<div class="output">
+			<span class="label">Effect runs:</span> <span id="effect">1</span>
+		</div>
+		<button id="increment">Increment</button>
+		<button id="reset">Reset</button>
+	</div>
+
+	<script type="module">
+		import { createSignal, createEffect, createMemo } from '../lib/index.js';
+
+		console.log('🐻 Demo started');
+
+		// Non-reactive: regular variable
+		let regularCount = 0;
+		document.getElementById('increment-regular').onclick = () => {
+			regularCount++;
+			console.log('Regular count is now:', regularCount, '(but UI stays at 0)');
+			// No automatic UI update!
+		};
+
+		// Reactive: signal
+		const [signalCount, setSignalCount] = createSignal(0);
+		createEffect(() => {
+			document.getElementById('signal').textContent = signalCount();
+			console.log('Signal count auto-updated to:', signalCount());
+		});
+		document.getElementById('increment-signal').onclick = () => setSignalCount(signalCount() + 1);
+
+		// Signal: reactive value
+		const [count, setCount] = createSignal(0);
+
+		// Memo: cached computation
+		const doubled = createMemo(() => {
+			console.log('Computing doubled');
+			return count() * 2;
+		});
+
+		// Effect: auto-runs when dependencies change
+		let runs = 0;
+		createEffect(() => {
+			runs++;
+			console.log(`Effect #${runs}: count=${count()}, doubled=${doubled()}`);
+			document.getElementById('count').textContent = count();
+			document.getElementById('memo').textContent = doubled();
+			document.getElementById('effect').textContent = runs;
+		});
+
+		document.getElementById('increment').onclick = () => setCount(count() + 1);
+		document.getElementById('reset').onclick = () => setCount(0);
+	</script>
+</body>
+</html>
