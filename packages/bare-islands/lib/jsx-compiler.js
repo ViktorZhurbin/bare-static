@@ -50,14 +50,11 @@ export async function compileJSXIsland({
 			return acc;
 		}, {});
 
-    customElement(
-      '${elementName}',
-      defaultProps,
-      (props) => {
-        noShadowDOM();
-        return Component(props);
-      }
-    );
+    customElement('${elementName}', defaultProps, (props) => {
+    	noShadowDOM();
+
+			return Component(props);
+		});
   `.trim();
 
 	const result = await esbuild.build({

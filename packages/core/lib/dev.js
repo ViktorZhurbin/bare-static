@@ -30,16 +30,10 @@ console.info(`Server at ${styleText("cyan", `http://localhost:${PORT}`)}`);
 const connections = new Set();
 
 // Collect all watch directories from plugins
-const watchDirs = new Set([CONTENT_DIR]); // Always watch content directory
-
-// TODO: can we avoid nested loop? create an array? flatMap?
-for (const plugin of config?.plugins || []) {
-	if (plugin.watchDirs) {
-		for (const dir of plugin.watchDirs) {
-			watchDirs.add(dir);
-		}
-	}
-}
+const watchDirs = new Set([
+	CONTENT_DIR,
+	...(config?.plugins || []).flatMap((p) => p.watchDirs || []),
+]);
 
 // Helper to notify all connections to reload
 function notifyReload() {
@@ -71,7 +65,7 @@ function notifyReload() {
 })();
 
 // Watch plugin directories (for components, islands, etc.)
-// TODO: can it be combined with the above "Watch content directory for markdown changes"?
+// Separate watcher from CONTENT_DIR because behavior differs: incremental vs full rebuild
 for (const dir of watchDirs) {
 	if (dir === CONTENT_DIR) continue; // Already watching above
 
@@ -83,8 +77,7 @@ for (const dir of watchDirs) {
 					console.info(
 						`${styleText("gray", "File changed:")} ${dir}/${event.filename}`,
 					);
-					// Full rebuild when plugin files change
-					// TODO: can we be smarter and rebuild only what's needed? Or it adds too much code and complexity?
+					// Full rebuild when plugin files change (dependency tracking not worth the complexity)
 					await buildAll({ injectScript: liveReloadScript });
 					console.info(styleText("green", "Rebuild complete"));
 					notifyReload();
