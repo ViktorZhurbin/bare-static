@@ -52,7 +52,6 @@ export function bareIslands(options = {}) {
 				imports: {
 					"solid-js": "https://esm.sh/solid-js",
 					"solid-js/web": "https://esm.sh/solid-js/web",
-					"solid-js/h/jsx-runtime": "https://esm.sh/solid-js/h/jsx-runtime",
 					"solid-element": "https://esm.sh/solid-element",
 				},
 			};
@@ -110,7 +109,6 @@ async function processIslands(islandsDir, outputDir, discoveredComponents) {
 			try {
 				const sourcePath = path.join(islandsDir, fileName);
 
-				console.log({ sourcePath });
 				await compileJSXIsland({
 					sourcePath,
 					outputPath: path.join(outputComponentsDir, outputFileName),
