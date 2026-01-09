@@ -4,9 +4,7 @@ export default function Counter({ initial = 0 }) {
 	const [count, setCount] = useState(initial);
 
 	return (
-		<div
-			style="padding: 20px; border: 2px solid #673ab8; border-radius: 8px; max-width: 300px;"
-		>
+		<div style="padding: 20px; border: 2px solid #673ab8; border-radius: 8px; max-width: 300px;">
 			<h3>Preact Counter Island</h3>
 			<p style="font-size: 24px; margin: 10px 0;">Count: {count}</p>
 			<div style="display: flex; gap: 10px;">

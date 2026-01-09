@@ -1,6 +1,6 @@
-import { bareIslands } from "@vktrz/bare-islands";
 import { bareIslandsPreact } from "@vktrz/bare-islands-preact";
+import { bareIslandsSolid } from "@vktrz/bare-islands-solid";
 
 export default {
-	plugins: [bareIslands(), bareIslandsPreact()],
+	plugins: [bareIslandsSolid(), bareIslandsPreact()],
 };

@@ -12,28 +12,6 @@ importers:
         specifier: 2.3.11
         version: 2.3.11
 
-  packages/bare-islands:
-    dependencies:
-      '@vktrz/bare-static':
-        specifier: workspace:*
-        version: link:../core
-      esbuild:
-        specifier: ^0.27.2
-        version: 0.27.2
-      solid-js:
-        specifier: ^1.9.0
-        version: 1.9.10
-    devDependencies:
-      '@babel/core':
-        specifier: ^7.28.5
-        version: 7.28.5
-      '@babel/preset-typescript':
-        specifier: ^7.28.5
-        version: 7.28.5(@babel/core@7.28.5)
-      babel-preset-solid:
-        specifier: ^1.9.10
-        version: 1.9.10(@babel/core@7.28.5)(solid-js@1.9.10)
-
   packages/bare-islands-preact:
     dependencies:
       '@vktrz/bare-static':
@@ -59,6 +37,28 @@ importers:
         specifier: ^7.27.0
         version: 7.28.5(@babel/core@7.28.5)
 
+  packages/bare-islands-solid:
+    dependencies:
+      '@vktrz/bare-static':
+        specifier: workspace:*
+        version: link:../core
+      esbuild:
+        specifier: ^0.27.2
+        version: 0.27.2
+      solid-js:
+        specifier: ^1.9.0
+        version: 1.9.10
+    devDependencies:
+      '@babel/core':
+        specifier: ^7.28.5
+        version: 7.28.5
+      '@babel/preset-typescript':
+        specifier: ^7.28.5
+        version: 7.28.5(@babel/core@7.28.5)
+      babel-preset-solid:
+        specifier: ^1.9.10
+        version: 1.9.10(@babel/core@7.28.5)(solid-js@1.9.10)
+
   packages/bare-signals:
     devDependencies:
       polka:
@@ -82,12 +82,12 @@ importers:
 
   website:
     dependencies:
-      '@vktrz/bare-islands':
-        specifier: workspace:*
-        version: link:../packages/bare-islands
       '@vktrz/bare-islands-preact':
         specifier: workspace:*
         version: link:../packages/bare-islands-preact
+      '@vktrz/bare-islands-solid':
+        specifier: workspace:*
+        version: link:../packages/bare-islands-solid
       '@vktrz/bare-static':
         specifier: workspace:*
         version: link:../packages/core

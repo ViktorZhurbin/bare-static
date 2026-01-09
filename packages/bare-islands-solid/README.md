@@ -1,10 +1,10 @@
-# @vktrz/bare-islands
+# @vktrz/bare-islands-solid
 
 Plugin for [@vktrz/bare-static](https://www.npmjs.com/package/@vktrz/bare-static) that enables interactive islands architecture with web components.
 
 ## What It Does
 
-The bare-islands plugin automatically:
+The plugin automatically:
 
 - Discovers `*.component.js` files in your `./components` directory
 - Copies them to the build output
@@ -16,7 +16,7 @@ This keeps the core SSG minimal while providing interactive capabilities for tho
 ## Installation
 
 ```bash
-npm install @vktrz/bare-islands
+npm install @vktrz/bare-islands-solid
 ```
 
 ## Usage
@@ -24,10 +24,10 @@ npm install @vktrz/bare-islands
 Create a `bare.config.js` file in your project root:
 
 ```javascript
-import { bareIslands } from "@vktrz/bare-islands";
+import { bareIslandsSolid } from "@vktrz/bare-islands-solid";
 
 export default {
-	plugins: [bareIslands()],
+	plugins: [bareIslandsSolid()],
 };
 ```
 
@@ -66,7 +66,7 @@ Use the component in your markdown:
 ## Options
 
 ```javascript
-bareIslands({
+bareIslandsSolid({
 	componentsDir: "./components", // Default: './components'
 });
 ```

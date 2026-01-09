@@ -53,16 +53,16 @@ Example: https://github.com/ViktorZhurbin/bare-static/tree/main/packages/website
 Extend bare-static with plugins via `bare.config.js`:
 
 ```javascript
-import { bareIslands } from "@vktrz/bare-islands";
+import { bareIslandsSolid } from "@vktrz/bare-islands-solid";
 
 export default {
-	plugins: [bareIslands()],
+	plugins: [bareIslandsSolid()],
 };
 ```
 
 ### Available Plugins
 
-**[@vktrz/bare-islands](https://www.npmjs.com/package/@vktrz/bare-islands)** - Interactive "islands" architecture with web components
+**[@vktrz/bare-islands-solid](https://www.npmjs.com/package/@vktrz/bare-islands-solid)** - Interactive "islands" architecture with web components
 
 ### Plugin API
 

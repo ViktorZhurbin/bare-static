@@ -18,7 +18,7 @@ const OUTPUT_DIR = "dist";
  * @param {string} [options.islandsDir] - Directory containing JSX islands
  * @returns {Object} Plugin instance with hooks
  */
-export function bareIslands(options = {}) {
+export function bareIslandsSolid(options = {}) {
 	const { islandsDir = DEFAULT_ISLANDS_DIR } = options;
 
 	let discoveredComponents = [];

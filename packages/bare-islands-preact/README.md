@@ -100,19 +100,19 @@ Component files can be named anything (e.g., `counter.jsx`, `my-widget.jsx`). Th
 - `counter.jsx` → `<counter-preact>`
 - `my-widget.jsx` → `<my-widget-preact>`
 
-This naming convention ensures components don't conflict with other framework plugins (like `@vktrz/bare-islands` for Solid.js).
+This naming convention ensures components don't conflict with other framework plugins (like `@vktrz/bare-islands-solid` for Solid.js).
 
 ## Coexistence with Other Frameworks
 
 You can use multiple island plugins together:
 
 ```javascript
-import { bareIslands } from "@vktrz/bare-islands";
+import { bareIslandsSolid } from "@vktrz/bare-islands-solid";
 import { bareIslandsPreact } from "@vktrz/bare-islands-preact";
 
 export default {
 	plugins: [
-		bareIslands(), // Solid.js islands from islands/
+		bareIslandsSolid(), // Solid.js islands from islands/
 		bareIslandsPreact(), // Preact islands from islands-preact/
 	],
 };

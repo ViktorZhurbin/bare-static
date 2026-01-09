@@ -216,7 +216,7 @@ export default function Counter({ initial = 0 }) {
 
 ### Core Tests
 
-- [ ] Test suite for bare-islands plugin (JSX compilation)
+- [ ] Test suite for bare-islands-\* plugins
 - [ ] Test Solid island mounting/unmounting in web components
 - [ ] Test web component wrapper generation
 - [ ] Test props passing (attributes → Solid props)
