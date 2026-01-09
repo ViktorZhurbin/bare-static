@@ -1,19 +1,23 @@
 import { detectCustomElements } from "./detect-custom-elements.js";
 
 /**
+ * @typedef {import('./types.js').IslandComponent} IslandComponent
+ */
+
+/**
  * Filter components to only those actually used on a page
  * Detects custom elements in content and returns matching components
  *
- * @param {Array<{elementName: string}>} discoveredComponents - All available components
+ * @param {IslandComponent[]} discoveredComponents - All available components
  * @param {string} pageContent - HTML or markdown content to scan for usage
- * @returns {Array} Components that are actually used in the page
+ * @returns {IslandComponent[]} Components that are actually used in the page
  *
  * @example
  * filterUsedComponents(
- *   [{elementName: 'counter-preact'}, {elementName: 'button-preact'}],
+ *   [{elementName: 'counter-preact', outputPath: '/components/counter-preact.js'}],
  *   '<counter-preact></counter-preact>'
  * )
- * // Returns: [{elementName: 'counter-preact'}]
+ * // Returns: [{elementName: 'counter-preact', outputPath: '/components/counter-preact.js'}]
  */
 export function filterUsedComponents(discoveredComponents, pageContent) {
 	const usedElements = detectCustomElements(pageContent);

@@ -4,6 +4,10 @@ import {
 } from "@vktrz/bare-static/plugin-utils";
 import { compileJSXIsland } from "./jsx-compiler.js";
 
+/**
+ * @typedef {import('@vktrz/bare-static/plugin-utils/types.js').IslandComponent} IslandComponent
+ */
+
 const DEFAULT_ISLANDS_DIR = "islands-solid";
 const OUTPUT_DIR = "dist";
 
@@ -18,6 +22,7 @@ const OUTPUT_DIR = "dist";
 export function bareIslandsSolid(options = {}) {
 	const { islandsDir = DEFAULT_ISLANDS_DIR } = options;
 
+	/** @type {IslandComponent[]} */
 	let discoveredComponents = [];
 
 	return {

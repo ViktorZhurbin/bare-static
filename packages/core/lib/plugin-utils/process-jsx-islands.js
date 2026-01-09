@@ -4,13 +4,17 @@ import { styleText } from "node:util";
 import { getElementName } from "./get-element-name.js";
 
 /**
+ * @typedef {import('./types.js').IslandComponent} IslandComponent
+ */
+
+/**
  * Process JSX island files - compile and register as web components
  * Generic helper for islands plugins to discover, compile, and track components
  *
  * @param {Object} options - Processing options
  * @param {string} options.islandsDir - Directory containing JSX island files
  * @param {string} options.outputDir - Build output directory
- * @param {Array} options.discoveredComponents - Array to populate with discovered components
+ * @param {IslandComponent[]} options.discoveredComponents - Array to populate with discovered components
  * @param {string} options.elementSuffix - Suffix for custom element names (e.g., '-preact', '-solid')
  * @param {Function} options.compileIsland - Compiler function that takes {sourcePath, outputPath, elementName}
  * @returns {Promise<void>}
@@ -70,13 +74,13 @@ export async function processJSXIslands({
 					elementName,
 				});
 
-				discoveredComponents.push({
-					type: "island",
-					sourceDir: islandsDir,
-					sourceFile: fileName,
+				const OUTPUT_COMPONENTS_DIR = "components";
+
+				/** @type {IslandComponent} */
+				const component = {
 					elementName,
-					outputPath: `/components/${outputFileName}`,
-				});
+					outputPath: `/${OUTPUT_COMPONENTS_DIR}/${outputFileName}`,
+				};
 			} catch (err) {
 				throw new Error(`Failed to process island ${fileName}: ${err.message}`);
 			}

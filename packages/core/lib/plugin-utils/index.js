@@ -5,9 +5,12 @@
  * Plugins are free to implement their own versions if they need custom behavior.
  */
 
+export { generateScriptsForUsedComponents } from "./ generate-scripts-for-used-components.js";
 export { detectCustomElements } from "./detect-custom-elements.js";
-export { getElementName } from "./get-element-name.js";
-export { generateScriptTag } from "./generate-script-tag.js";
 export { filterUsedComponents } from "./filter-used-components.js";
-export { generateScriptsForUsedComponents } from "./generate-scripts-for-used-components.js";
+export { generateScriptTag } from "./generate-script-tag.js";
+export { getElementName } from "./get-element-name.js";
 export { processJSXIslands } from "./process-jsx-islands.js";
+
+// Types are available via JSDoc imports:
+// @typedef {import('@vktrz/bare-static/plugin-utils/types.js').IslandComponent} IslandComponent

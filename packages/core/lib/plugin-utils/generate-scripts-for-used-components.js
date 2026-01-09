@@ -2,10 +2,14 @@ import { filterUsedComponents } from "./filter-used-components.js";
 import { generateScriptTag } from "./generate-script-tag.js";
 
 /**
+ * @typedef {import('./types.js').IslandComponent} IslandComponent
+ */
+
+/**
  * Generate script tags for components used on a page
  * Filters components by page content and returns script tags for only used components
  *
- * @param {Array<{elementName: string, outputPath: string}>} discoveredComponents - All available components
+ * @param {IslandComponent[]} discoveredComponents - All available components
  * @param {string} pageContent - HTML or markdown content to scan for usage
  * @returns {string[]} Array of script tag strings
  *
@@ -20,6 +24,9 @@ export function generateScriptsForUsedComponents(
 	discoveredComponents,
 	pageContent,
 ) {
-	const usedComponents = filterUsedComponents(discoveredComponents, pageContent);
+	const usedComponents = filterUsedComponents(
+		discoveredComponents,
+		pageContent,
+	);
 	return usedComponents.map(({ outputPath }) => generateScriptTag(outputPath));
 }
