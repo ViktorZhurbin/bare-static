@@ -4,7 +4,7 @@ import {
 } from "@vktrz/bare-static/plugin-utils";
 import { compileJSXIsland } from "./jsx-compiler.js";
 
-const DEFAULT_ISLANDS_DIR = "islands";
+const DEFAULT_ISLANDS_DIR = "islands-solid";
 const OUTPUT_DIR = "dist";
 
 /**
@@ -70,8 +70,10 @@ export function bareIslandsSolid(options = {}) {
 		 * @returns {Promise<string[]>} Array of script tag strings
 		 */
 		async getScripts({ pageContent }) {
-			return generateScriptsForUsedComponents(discoveredComponents, pageContent);
+			return generateScriptsForUsedComponents(
+				discoveredComponents,
+				pageContent,
+			);
 		},
 	};
 }
-
