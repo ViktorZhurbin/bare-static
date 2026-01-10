@@ -1,19 +1,41 @@
 # Roadmap
 
-Should probably think of a better naming for the core package. And update naming for plugins (plugin-solid, plugin-*)
+## 🎯 Meta
 
-## Focus 
+- Should probably think of a better naming for the core package. And update naming for plugins (plugin-solid, plugin-*)
 
-- [ ] [core] JSX for layouts, templating, static components
-- [ ] [core] configurable paths (output, content)
-- [ ] [core]: Watch all files, rebuild on change (config, content, components
+---
+
+## 🚀 Core Features
+
+### File Watching & Rebuilds
+
+- [ ] Watch all files, rebuild on change (config, content, components)
+- [ ] Watch `.t|jsx` files, rebuild on change
+
+### JSX & TSX Support
+
+- [ ] JSX for layouts, templating, static components
 - [ ] TSX support (core and plugins)
-- [ ] [plugin] Explore micro-frameworks (LitHTML, HyperHTML, IncrementalDOM, modern alternatives)
-- [ ] [core] Watch `.t|jsx` files, rebuild on change
-- [ ] [plugin] code syntax highlight
+
+### Configuration
+
+- [ ] Configurable paths (output, content)
+
+---
+
+## 🏝️ Plugin Features
+
+### Islands Architecture
+
 - [ ] Lazy load islands (Intersection Observer for below-fold islands)
-- [ ] Consider preloading framework runtime for critical islands 
+- [ ] Consider preloading framework runtime for critical islands
 - [ ] Consider static > island swapping to avoid layout jump
+
+### Plugin Development
+
+- [ ] Explore micro-frameworks (LitHTML, HyperHTML, IncrementalDOM, modern alternatives)
+- [ ] Code syntax highlight
 
 ---
 
