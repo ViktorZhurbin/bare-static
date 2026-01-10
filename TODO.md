@@ -8,11 +8,6 @@
 
 ## 🚀 Core Features
 
-### JSX & TSX Support
-
-- [ ] JSX for layouts, templating, static components
-- [x] TSX support (core and plugins)
-
 ### Configuration
 
 - [ ] Configurable paths (output, content)
