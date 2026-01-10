@@ -1,4 +1,4 @@
-# Bare Static
+# Reef
 
 A minimalist SSG framework with optional reactivity islands.
 

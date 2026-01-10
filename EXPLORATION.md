@@ -1,4 +1,4 @@
-# Bare Static: Exploration & Learnings
+# Exploration & Learnings
 
 **AI-generated doc capturing my SSG/reactivity exploration**
 
@@ -6,7 +6,7 @@
 
 ### 1. Learning & Fun First, Production Second
 
-Building bare-signals taught more about reactivity than using a framework ever would. This is an educational project - if it ever becomes a useful tool, that's a bonus.
+Building `reef` taught more about reactivity than using a framework ever would. This is an educational project - if it ever becomes a useful tool, that's a bonus.
 
 ### 2. Keep It Simple
 

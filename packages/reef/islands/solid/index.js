@@ -12,7 +12,7 @@ import { compileJSXIsland } from "./jsx-compiler.js";
 const DEFAULT_ISLANDS_DIR = "islands-solid";
 
 /**
- * Bare Islands Plugin
+ * Reef Islands Solid Plugin
  * Enables interactive islands architecture with Solid.js JSX components
  *
  * @param {Object} options - Plugin configuration
@@ -66,7 +66,7 @@ export function solidIslands(options = {}) {
 			return `<script type="importmap">${JSON.stringify(
 				importMap,
 				null,
-				2,
+				2
 			)}</script>`;
 		},
 

@@ -12,7 +12,7 @@ import { compileJSXIsland } from "./jsx-compiler.js";
 const DEFAULT_ISLANDS_DIR = "islands-preact";
 
 /**
- * Bare Islands Preact Plugin
+ * Reef Islands Preact Plugin
  * Enables interactive islands architecture with Preact JSX components
  *
  * @param {Object} options - Plugin configuration
@@ -70,7 +70,7 @@ export function preactIslands(options = {}) {
 			return `<script type="importmap">${JSON.stringify(
 				importMap,
 				null,
-				2,
+				2
 			)}</script>`;
 		},
 

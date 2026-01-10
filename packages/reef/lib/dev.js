@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { styleText } from "node:util";
 import polka from "polka";
 import sirv from "sirv";
+import { CONFIG_FILE } from "../constants/config.js";
 import { CONTENT_DIR, LAYOUTS_DIR, OUTPUT_DIR } from "../constants/dir.js";
 import { buildAll, buildSingle, reloadLayouts } from "./builder.js";
 import { loadConfig } from "./config-loader.js";
@@ -14,7 +15,7 @@ const PORT = 3000;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const liveReloadJs = await fsPromises.readFile(
 	path.join(__dirname, "live-reload.js"),
-	"utf-8",
+	"utf-8"
 );
 const liveReloadScript = `<script>\n${liveReloadJs}\n</script>`;
 
@@ -45,7 +46,7 @@ function notifyReload() {
 // Watch config file for changes
 (async () => {
 	try {
-		const watcher = fsPromises.watch("./bare.config.js");
+		const watcher = fsPromises.watch(CONFIG_FILE);
 		for await (const _event of watcher) {
 			console.info(styleText("yellow", "\n⚙️  Config changed, restarting..."));
 			server.server.close();

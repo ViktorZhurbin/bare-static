@@ -1,7 +1,6 @@
-import { pathToFileURL } from "node:url";
 import fsPromises from "node:fs/promises";
-
-const CONFIG_FILE = "./bare.config.js";
+import { pathToFileURL } from "node:url";
+import { CONFIG_FILE } from "../constants/config.js";
 
 /**
  * Load configuration file with plugins

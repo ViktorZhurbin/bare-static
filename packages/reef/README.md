@@ -1,14 +1,18 @@
-# Bare Static
+# Reef
 
-A minimal markdown-to-HTML generator that happens to work.
-
-Exploring what it takes to build a minimal static site generator tool.
+A minimalist SSG framework with optional reactivity islands.
 
 ## Features
 
-✓ Converts markdown files to HTML
+✓ Markdown to HTML
+
+✓ JSX to static HTML
+
+✓ JSX to interactive components (with plugins for Solid.js, Preact)
 
 ✓ Dev server with live reload
+
+✓ Plugins for extensibility (reactivity, code highlight)
 
 ## Quick Start
 
@@ -25,23 +29,31 @@ Add scripts to `package.json`:
 
 ## Requirements
 
+TODO: needs update
+
 At the root of the project, add `content/` folder with `.md` files, and a `template.html` with `{{title}}` and `{{content}}` placeholders.
 
 Example: https://github.com/ViktorZhurbin/reef/tree/main/packages/website
 
-## How It Works
+### Plugin API
 
-**builder.js**:
+Plugins are objects with optional hooks:
 
-- Async build logic with parallel file processing
+```javascript
+export function myPlugin(options = {}) {
+	return {
+		name: "my-plugin",
 
-**dev.js**:
+		// Called during build - copy files, process assets, etc.
+		async onBuild({ outputDir, contentDir }) {
+			// Your build logic
+		},
 
-- Dev server serving static files
-- Watches `content/`, rebuilds and reloads page on file change
-
-**live-reload.js**:
-
-- Client-side script for live reload in dev mode
-- Connects to `/events` endpoint of dev server for real-time updates
-- Automatically reloads page when server pushes 'reload' event
+		// Returns script tags to inject into pages
+		async getScripts({ pageContent }) {
+			// pageContent is the markdown source for the current page
+			return ['<script src="/my-script.js"></script>'];
+		},
+	};
+}
+```
