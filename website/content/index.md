@@ -9,6 +9,9 @@ A minimal markdown-based static site generator with optional interactive islands
 
 ## Plugins
 
+<counter-solid></counter-solid>
+<counter-preact></counter-preact>
+
 Add interactivity only where you need it:
 
 - [islands-preact](/islands-preact.html) - Lightweight Preact components (~4kb runtime)

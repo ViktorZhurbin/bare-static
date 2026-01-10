@@ -30,8 +30,6 @@ export async function reloadLayouts() {
 	layouts = await loadLayouts();
 }
 
-const defaultPlugins = [solidIslands(), preactIslands];
-
 /**
  * Build a single markdown file to HTML
  * @param {string} mdFileName - Markdown file name (relative to content directory)
@@ -50,8 +48,8 @@ export async function buildSingle(mdFileName, options = {}) {
 			console.info(
 				`Writing ${OUTPUT_DIR}/${htmlFileName} ${styleText(
 					"gray",
-					`from ${mdFilePath}`,
-				)}`,
+					`from ${mdFilePath}`
+				)}`
 			);
 		}
 
@@ -64,20 +62,16 @@ export async function buildSingle(mdFileName, options = {}) {
 
 		// Render markdown to HTML
 		const contentHtml = marked(markdown);
-		const allPlugins = [...defaultPlugins, ...plugins];
 
-		// Get import maps from plugins (must come before module scripts)
+		// Get import maps and per-page scripts from plugins
 		const importMaps = [];
-		for (const plugin of allPlugins) {
+		const pluginScripts = []; // per-page scripts from plugins
+		for (const plugin of plugins) {
 			if (plugin.getImportMap) {
 				const importMap = await plugin.getImportMap();
 				if (importMap) importMaps.push(importMap);
 			}
-		}
 
-		// Get per-page scripts from plugins
-		const pluginScripts = [];
-		for (const plugin of plugins) {
 			if (plugin.getScripts) {
 				const scripts = await plugin.getScripts({ pageContent: markdown });
 				pluginScripts.push(...scripts);
@@ -118,11 +112,13 @@ export async function buildSingle(mdFileName, options = {}) {
 	} catch (err) {
 		console.error(
 			`${styleText("gray", "Failed to build")} ${mdFileName}`,
-			err.message,
+			err.message
 		);
 		return false;
 	}
 }
+
+const defaultPlugins = [solidIslands(), preactIslands()];
 
 /**
  * Build all markdown files to HTML
@@ -147,7 +143,11 @@ export async function buildAll(options = {}) {
 	}
 
 	// Merge plugins from config and options
-	const allPlugins = [...(config?.plugins || []), ...plugins];
+	const allPlugins = [
+		...(config?.plugins || []),
+		...defaultPlugins,
+		...plugins,
+	];
 
 	// Run plugin onBuild hooks (for file copying, etc.)
 	for (const plugin of allPlugins) {
@@ -167,7 +167,7 @@ export async function buildAll(options = {}) {
 				logOnStart: verbose,
 				plugins: allPlugins,
 			});
-		},
+		}
 	);
 
 	if (buildPromises.length === 0) {
@@ -184,11 +184,11 @@ export async function buildAll(options = {}) {
 
 	const successMessage = styleText(
 		"green",
-		`Wrote ${successCount} files in ${buildTime}`,
+		`Wrote ${successCount} files in ${buildTime}`
 	);
 	if (failCount > 0) {
 		console.info(
-			`${successMessage} ${styleText("yellow", `(${failCount} failed)`)}`,
+			`${successMessage} ${styleText("yellow", `(${failCount} failed)`)}`
 		);
 	} else {
 		console.info(successMessage);
