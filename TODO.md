@@ -8,11 +8,6 @@
 
 ## 🚀 Core Features
 
-### File Watching & Rebuilds
-
-- [ ] Watch all files, rebuild on change (config, content, components)
-- [ ] Watch `.t|jsx` files, rebuild on change
-
 ### JSX & TSX Support
 
 - [ ] JSX for layouts, templating, static components
