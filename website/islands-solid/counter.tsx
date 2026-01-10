@@ -1,8 +1,9 @@
 import { createSignal } from "solid-js";
+import type { Component } from "solid-js";
 import "./counter.css";
 
-export default function Counter() {
-	const [count, setCount] = createSignal(0);
+const Counter: Component = () => {
+	const [count, setCount] = createSignal<number>(0);
 
 	return (
 		<div class="counter-solid">
@@ -15,4 +16,6 @@ export default function Counter() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Counter;

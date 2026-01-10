@@ -11,7 +11,7 @@
 ### JSX & TSX Support
 
 - [ ] JSX for layouts, templating, static components
-- [ ] TSX support (core and plugins)
+- [x] TSX support (core and plugins)
 
 ### Configuration
 

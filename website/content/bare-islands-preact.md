@@ -30,13 +30,18 @@ export default {
 };
 ```
 
-Create your component in `./islands-preact/counter.jsx`:
+Create your component in `./islands-preact/counter.tsx`:
 
-```javascript
+```typescript
 import { useState } from "preact/hooks";
+import type { FunctionComponent } from "preact";
 
-export default function Counter({ initial = 0 }) {
-  const [count, setCount] = useState(initial);
+interface CounterProps {
+  initial?: number;
+}
+
+const Counter: FunctionComponent<CounterProps> = ({ initial = 0 }) => {
+  const [count, setCount] = useState<number>(initial);
 
   return (
     <div>
@@ -44,7 +49,9 @@ export default function Counter({ initial = 0 }) {
       <button onClick={() => setCount(count + 1)}>Increment</button>
     </div>
   );
-}
+};
+
+export default Counter;
 ```
 
 Use it in your markdown:
@@ -72,8 +79,8 @@ This means:
 ## Component Naming
 
 File name → Custom element name:
-- `counter.jsx` → `<counter-preact>`
-- `my-widget.jsx` → `<my-widget-preact>`
+- `counter.tsx` → `<counter-preact>`
+- `my-widget.tsx` → `<my-widget-preact>`
 
 The `-preact` suffix prevents conflicts with other framework plugins like `bare-islands-solid`.
 

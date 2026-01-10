@@ -30,12 +30,17 @@ export default {
 };
 ```
 
-Create your component in `./islands/counter.jsx`:
+Create your component in `./islands/counter.tsx`:
 
-```javascript
+```typescript
 import { createSignal } from "solid-js";
+import type { Component } from "solid-js";
 
-export default function Counter(props) {
+interface CounterProps {
+  initial?: number;
+}
+
+const Counter: Component<CounterProps> = (props) => {
   const [count, setCount] = createSignal(props.initial ?? 0);
 
   return (
@@ -46,7 +51,9 @@ export default function Counter(props) {
       </button>
     </div>
   );
-}
+};
+
+export default Counter;
 ```
 
 Use it in your markdown:
@@ -74,8 +81,8 @@ This means:
 ## Component Naming
 
 File name → Custom element name:
-- `counter.jsx` → `<counter-solid>`
-- `my-widget.jsx` → `<my-widget-solid>`
+- `counter.tsx` → `<counter-solid>`
+- `my-widget.tsx` → `<my-widget-solid>`
 
 The `-solid` suffix prevents conflicts with other framework plugins like `bare-islands-preact`.
 

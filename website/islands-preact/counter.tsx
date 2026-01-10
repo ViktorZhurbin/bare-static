@@ -1,8 +1,13 @@
 import { useState } from "preact/hooks";
+import type { FunctionComponent } from "preact";
 import "./counter.css";
 
-export default function Counter({ initial = 0 }) {
-	const [count, setCount] = useState(initial);
+interface CounterProps {
+	initial?: number;
+}
+
+const Counter: FunctionComponent<CounterProps> = ({ initial = 0 }) => {
+	const [count, setCount] = useState<number>(initial);
 
 	return (
 		<div class="counter-preact">
@@ -15,4 +20,6 @@ export default function Counter({ initial = 0 }) {
 			</div>
 		</div>
 	);
-}
+};
+
+export default Counter;
