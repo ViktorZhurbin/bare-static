@@ -64,8 +64,7 @@ Register framework init types (preact/solid)
 
 Alternative: Build custom ReefIsland if is-land feels limiting
 
--
-IntersectionObserver for on:visible
+- IntersectionObserver for on:visible
 - requestIdleCallback for on:idle
 - Promise-based state machine (~60 LOC)
 
