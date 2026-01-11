@@ -1,99 +1,112 @@
-# Roadmap
+# Reef Roadmap
 
-## Clean up and better organize lib and utils folders
+## 🎯 Current Focus
 
-## Configurable paths
-Use reef.config.js file to configure output, content and other directories (current defaults are in `constants/dir.js`)
+Build reef's docs site with reef (dogfooding)
 
-## JSX Pages - v2
+Then: Clean up based on real usage pain points
 
-Allow layout wrapping in pages/.
+## 🔬 Research & Learning
 
-- Same logic as the current data-cascade: default > reef.js > frontmatter, but with `metadata` instead of frontmatter
-- Pass all metadata fields as props to layout
+### Explore Similar Projects
+
+[ ] Fresh (Deno) - Islands without build step
+[ ] Lume - Modern 11ty-style SSG with JSX
+[ ] Lit - Native web components reactivity
 
 
-1. **Metadata exports** - Title, layout selection, custom fields
+## 🏗️ Core Architecture
 
-```jsx
+### Code Organization
+
+- [ ] Reorganize lib/ and utils/ by domain (routing, compilation, plugins)
+- [ ] Extract shared compilation logic (layouts + islands + pages)
+
+### Configuration
+
+- [ ] Make paths configurable via reef.config.js
+  - `contentDir`, `pagesDir`, `layoutsDir`, `outputDir`
+  - Currently hardcoded in constants/dir.js
+
+### Error Handling
+
+- [ ] Better error messages ("Island X used but not found in islands-*/")
+- [ ] Validate JSX compilation errors with helpful context
+- [ ] Catch routing conflicts (pages/about.jsx + content/about.md)
+
+---
+
+## 🎨 Features
+
+### JSX Pages v2 - Layout Support
+- [ ] Add metadata export pattern for pages/
+  ```jsx
   export const metadata = {
-      title: 'Welcome',
-      layout: 'default'
-    };
+    title: 'Page Title',
+    layout: 'default',
+    // custom fields...
+  };
+[ ] Implement data cascade: default > reef.js > metadata
+[ ] Pass all metadata fields as props to layout
+[ ] Detect full-page vs content-only (warn if layout + )
 
-    export default function Landing() {
-      return (
-        <main>
-          <h1>Welcome to Reef</h1>
-          <counter-solid></counter-solid>
-        </main>
-      );
-    }
-```
+### Island Lazy Loading
 
----
+Decision: Try is-land library first
 
-## 🏝️ Plugin Features
+- Wrap components in <is-land on:visible> during build
+- Add is-land.js to import maps
+Register framework init types (preact/solid)
 
-### Islands Architecture
+Alternative: Build custom ReefIsland if is-land feels limiting
 
-Check is-land implementation and functionality: 
+-
+IntersectionObserver for on:visible
+- requestIdleCallback for on:idle
+- Promise-based state machine (~60 LOC)
 
-1. Lazy Loading: Borrow the on:visible logic to prevent your web component from calling its render() or mount() function until it's in the viewport.
-
-2. Import Maps Management: You are already using CDN-based import maps. Look at how is-land manages these globally to avoid duplication.
-
-3. Data-Save/Media Triggers: Borrow the logic that checks for prefers-reduced-data or specific media queries before loading heavy JS bundles.
-
-4. Static HTML as placeholder. Progressive enhancement, plus to avoid layout jump
-
-### Plugin Development
-
-- [ ] Explore micro-frameworks (LitHTML, HyperHTML, IncrementalDOM, modern alternatives)
-- [ ] Code syntax highlight
-
----
+## Developer Experience
+[ ] reef create <project-name> CLI command (scaffold new projects)
+[ ] Improved dev server logging (clearer rebuild messages)
 
 ## 📚 Documentation
 
-### High Priority Docs
+### User Guides
+[ ] Quick start: "From static to your first island"
+[ ] Folder structure and routing conventions
+[ ] Config file reference (reef.config.js)
+Island Usage
+[ ] Component naming conventions (Counter.jsx → counter-solid)
+[ ] Props and attributes (how to pass data to islands)
+[ ] Web component wrapper pattern explanation
+Examples
+[ ] Simple nested components
+[ ] Complex example: mini dashboard with multiple islands
+[ ] Real-world: Build reef's own docs site with reef
 
-- Update and unify plugin docs format
-- [ ] Document JSX component conventions (file naming, props)
-- [ ] Document main conventions (folder structure, naming, config options, templating)
-- [ ] Document web component wrapper pattern
-- [ ] Quick start guide: "Your first island"
+## ⚡ Production Ready
 
-### Examples
+### Performance
 
-- [ ] Counter (basic signal usage)
-- [ ] Form with validation (effects, multiple signals)
-- [ ] Nested components - create a mini dashboard
+[ ] Minify JS in production builds
+[ ] Content hash in filenames (cache busting)
+[ ] CSS bundling and optimization
+Testing
+[ ] Define testing strategy (unit? integration? e2e?)
+[ ] Test island detection and injection
+[ ] Test layout resolution cascade
 
----
 
-## 🛠️ Developer Experience
+## 🧹 Polish
 
-- [ ] Add `reef create <project-name>` CLI command (new project scaffold)
-- [ ] Better error messages (e.g., "Island X used but not found")
-- [ ] Validate JSX compilation errors (helpful error messages)
+### Routing
 
----
+[ ] Research Astro/11ty routing conventions
+[ ] Handle duplicate routes (pages/ vs content/)
+[ ] Document routing priority/conflicts
 
-## ⚡ Performance
+### Refactoring
 
-- [ ] Minify js in production
-- [ ] Bundle frameworks at build, instead of CDN?
-- [ ] Add cache busting (content hash in filenames)
-- [ ] Tree-shake unused Solid features (only ship what islands use)?
-
----
-
-## 🧪 Testing
-
-### Core Tests
-
-- [ ] Test suite for islands plugins
-- [ ] Test island mounting/unmounting in web components
-- [ ] Test nested components inside island
-- [ ] Test one complex Solid island (routing, state, API calls)
+[ ] Extract duplicate compilation logic
+[ ] Simplify plugin API surface
+[ ] Review complexity added this week
