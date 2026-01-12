@@ -109,8 +109,23 @@ await esbuild.build({
 });
 ```
 
-- [ ] Content hash in filenames (cache busting)
+- [ ] Content hash in filenames (cache busting).
+```js
+// Only rebuild changed files
+const cache = new Map();
+if (cache.get(filePath) === hash(content)) {
+  return; // Skip rebuild
+}
+```
 - [ ] CSS bundling and optimization
+```js
+// Granular updates (CSS without page reload)
+if (changedFile.endsWith('.css')) {
+  broadcast({ type: 'css-update', href: '/styles.css' });
+} else {
+  broadcast({ type: 'reload' });
+}
+```
 
 ### Testing
 
@@ -122,7 +137,7 @@ await esbuild.build({
 
 ### Routing
 
-- [ ] Research Astro/11ty routing conventions
+- [ ] Research Astro, 11ty, etc routing conventions
 - [ ] Handle duplicate routes (pages/ vs content/)
 - [ ] Document routing priority/conflicts
 
