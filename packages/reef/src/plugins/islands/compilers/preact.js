@@ -5,8 +5,10 @@ export async function compilePreactIsland({ sourcePath, outputPath }) {
 		sourcePath,
 		outputPath,
 		frameworkConfig: {
-			jsx: "automatic",
-			jsxImportSource: "preact",
+			jsx: {
+				importSource: "preact",
+				runtime: "automatic",
+			},
 			external: ["preact", "preact/hooks", "preact/jsx-runtime"],
 		},
 	});

@@ -1,5 +1,4 @@
 import { join } from "node:path";
-import * as esbuild from "esbuild";
 import { defaultPlugins } from "../plugins/defaultPlugins.js";
 
 /**
@@ -36,17 +35,15 @@ export async function collectAssets({ pageContent }) {
 	}
 
 	// Auto-inject live reload asset in dev mode
-	if (process.env.REEF_DEV === "true") {
-		const result = await esbuild.build({
-			entryPoints: [join(import.meta.dirname, "../dev/live-reload.js")],
-			write: false,
-			bundle: true,
-			format: "esm",
-			target: "node22",
-			logLevel: "warning",
+	if (process.env.NODE_ENV === "development") {
+		// Bundle live reload script as an asset (will be auto-injected)
+		const liveReloadBundle = await Bun.build({
+			entrypoints: [join(import.meta.dirname, "../dev/live-reload.js")],
+			target: "browser",
+			minify: true,
 		});
 
-		const liveReloadJs = result.outputFiles[0].text;
+		const liveReloadJs = await liveReloadBundle.outputs[0].text();
 
 		assets.push({
 			tag: "script",

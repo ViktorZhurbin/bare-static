@@ -1,21 +1,22 @@
 {
-	"permissions": {
-		"allow": [
-			"Bash(git log:*)",
-			"Bash(git diff:*)",
-			"Bash(git stash:*)",
-			"Bash(git add:*)",
-			"Bash(pnpm:*)",
-			"Bash(cat:*)",
-			"Bash(lsof:*)",
-			"Bash(xargs kill -9)",
-			"Bash(grep:*)",
-			"Bash(tree:*)",
-			"Bash(mkdir:*)",
-			"Bash(cp:*)",
-			"Bash(ls:*)",
-			"Bash(find:*)",
-			"Bash(wc:*)"
-		]
-	}
+  "permissions": {
+    "allow": [
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git stash:*)",
+      "Bash(git add:*)",
+      "Bash(pnpm:*)",
+      "Bash(cat:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill -9)",
+      "Bash(grep:*)",
+      "Bash(tree:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(wc:*)",
+      "WebSearch"
+    ]
+  }
 }

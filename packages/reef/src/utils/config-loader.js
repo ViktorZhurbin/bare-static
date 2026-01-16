@@ -1,5 +1,4 @@
-import { access } from "node:fs/promises";
-import { pathToFileURL } from "node:url";
+import { resolve } from "node:path";
 import { CONFIG_FILE } from "../constants/config.js";
 
 /**
@@ -11,13 +10,15 @@ import { CONFIG_FILE } from "../constants/config.js";
  * @returns {Promise<ReefConfig|null>} Configuration object or null if file doesn't exist
  */
 export async function loadConfig() {
+	// Use Bun's fast synchronous file check
+	const configExists = await Bun.file(CONFIG_FILE).exists();
+	if (!configExists) return null;
+
 	try {
-		await access(CONFIG_FILE);
-		const configUrl = pathToFileURL(CONFIG_FILE).href;
-		const config = await import(configUrl);
+		const configPath = resolve(CONFIG_FILE);
+		const config = await import(configPath);
 		return config.default;
 	} catch (err) {
-		if (err.code === "ENOENT") return null; // No config file, that's fine
 		throw new Error(`Failed to load config: ${err.message}`);
 	}
 }

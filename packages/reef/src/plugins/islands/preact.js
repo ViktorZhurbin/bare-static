@@ -1,5 +1,5 @@
-import { createIslandPlugin } from "./index.js";
 import { compilePreactIsland } from "./compilers/preact.js";
+import { createIslandPlugin } from "./index.js";
 
 /**
  * Reef Islands Preact Plugin

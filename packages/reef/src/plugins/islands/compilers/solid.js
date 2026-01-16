@@ -1,16 +1,15 @@
-import { readFile } from "node:fs/promises";
 import tsPreset from "@babel/preset-typescript";
 import solidPreset from "babel-preset-solid";
 import { compileIslandWithConfig } from "./helpers.js";
 
 /**
- * A tiny esbuild plugin to handle Solid JSX via Babel
+ * A tiny plugin to handle Solid JSX via Babel
  */
 const solidBabelPlugin = {
 	name: "solid-babel",
 	setup(build) {
 		build.onLoad({ filter: /\.[jt]sx$/ }, async (args) => {
-			const source = await readFile(args.path, "utf8");
+			const source = await Bun.file(args.path).text();
 
 			const { code } = await import("@babel/core").then((babel) =>
 				babel.transformAsync(source, {
@@ -33,6 +32,10 @@ export async function compileSolidIsland({ sourcePath, outputPath }) {
 		outputPath,
 		frameworkConfig: {
 			plugins: [solidBabelPlugin],
+			jsx: {
+				importSource: "preact",
+				runtime: "automatic",
+			},
 			external: ["solid-js", "solid-js/web"],
 		},
 	});

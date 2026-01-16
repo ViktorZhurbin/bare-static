@@ -1,4 +1,3 @@
-import { access, glob, mkdir } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 import { styleText } from "node:util";
 
@@ -26,9 +25,14 @@ export async function processJSXIslands({
 }) {
 	const OUTPUT_COMPONENTS_DIR = "components";
 
+	// Discover island files using Bun.Glob
+	const glob = new Bun.Glob("*.{jsx,tsx}");
+	const jsxFiles = [];
+
 	try {
-		// 1. Check if islands directory exists
-		await access(islandsDir);
+		for await (const fileName of glob.scan(islandsDir)) {
+			jsxFiles.push(fileName);
+		}
 	} catch (err) {
 		if (err.code === "ENOENT") {
 			console.warn(
@@ -40,75 +44,67 @@ export async function processJSXIslands({
 		throw err;
 	}
 
-	// 2. Prepare output directory
+	const discoveredComponents = [];
+	const compiledIslands = [];
+
+	if (jsxFiles.length === 0) return discoveredComponents;
+
 	const outputComponentsDir = join(outputDir, OUTPUT_COMPONENTS_DIR);
-	await mkdir(outputComponentsDir, { recursive: true });
 
-	// 3. Glob files and process them using Array.fromAsync
-	// This iterates over the glob generator and runs the async mapper for each file
-	const results = await Array.fromAsync(
-		glob(join(islandsDir, "**/*.{jsx,tsx}")),
-		async (sourcePath) => {
-			const fileName = basename(sourcePath);
-			const elementName = getElementName(fileName, elementSuffix);
-			const outputFileName = `${elementName}.js`;
-			const outputPath = join(outputComponentsDir, outputFileName);
+	for (const fileName of jsxFiles) {
+		const elementName = getElementName(fileName, elementSuffix);
+		const outputFileName = `${elementName}.js`;
 
-			try {
-				const compilationResult = await compileIsland({
-					sourcePath,
-					outputPath,
-				});
+		const sourcePath = join(islandsDir, fileName);
+		const outputPath = join(outputComponentsDir, outputFileName);
 
-				/** @type {IslandComponent} */
-				const component = {
-					elementName,
-					outputPath: `/${OUTPUT_COMPONENTS_DIR}/${outputFileName}`,
-					framework,
-				};
+		try {
+			const compilationResult = await compileIsland({
+				sourcePath,
+				outputPath,
+			});
 
-				// Add CSS path if it exists
-				if (compilationResult?.cssOutputPath) {
-					const cssFileName = basename(compilationResult.cssOutputPath);
-					component.cssPath = `/${OUTPUT_COMPONENTS_DIR}/${cssFileName}`;
-				}
+			/** @type {IslandComponent} */
+			const component = {
+				elementName,
+				outputPath: `/${OUTPUT_COMPONENTS_DIR}/${outputFileName}`,
+				framework,
+			};
 
-				// Return both the public component data and internal logging metadata
-				return {
-					component,
-					logMeta: { sourcePath, elementName },
-				};
-			} catch (err) {
-				throw new Error(`Failed to process island ${fileName}: ${err.message}`);
+			// Add CSS path if it exists
+			if (compilationResult?.cssOutputPath) {
+				const cssFileName = basename(compilationResult.cssOutputPath);
+				component.cssPath = `/${OUTPUT_COMPONENTS_DIR}/${cssFileName}`;
 			}
-		},
-	);
 
-	// 4. Separate results for Logging and Return
-	const discoveredComponents = results.map((r) => r.component);
-	const compiledLog = results.map((r) => r.logMeta);
-
-	// 5. Log results (Preserving original format)
-	if (compiledLog.length > 0) {
-		console.info(
-			styleText(
-				"green",
-				`✓ Compiled ${compiledLog.length} island${
-					compiledLog.length > 1 ? "s" : ""
-				}:`,
-			),
-		);
-		for (const { sourcePath, elementName } of compiledLog) {
-			console.info(
-				`  ${styleText("cyan", sourcePath)} → ${styleText(
-					"magenta",
-					`<${elementName}>`,
-				)}`,
-			);
+			discoveredComponents.push(component);
+			compiledIslands.push({ sourcePath, elementName });
+		} catch (err) {
+			throw new Error(`Failed to process island ${fileName}: ${err.message}`);
 		}
-	}
 
-	return discoveredComponents;
+		// Log compiled islands
+		if (compiledIslands.length > 0) {
+			console.info(
+				styleText(
+					"green",
+					`✓ Compiled ${compiledIslands.length} island${
+						compiledIslands.length > 1 ? "s" : ""
+					}:`,
+				),
+			);
+			for (const { sourcePath, elementName } of compiledIslands) {
+				console.info(
+					`  ${styleText("cyan", sourcePath)} → ${styleText(
+						"magenta",
+						`<${elementName}>`,
+					)}`,
+				);
+			}
+		}
+
+		return discoveredComponents;
+	}
 }
 
 function getElementName(fileName, suffix = "-component") {

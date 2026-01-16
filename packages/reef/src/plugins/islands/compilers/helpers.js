@@ -1,6 +1,5 @@
-import { basename, dirname } from "node:path";
-import * as esbuild from "esbuild";
-import { writeBuildOutput } from "../../../utils/write-build-output.js";
+import { basename, dirname, resolve } from "node:path";
+import { styleText } from "node:util";
 
 /**
  * Creates virtual entry that exports the component
@@ -14,13 +13,13 @@ export default Component;
 
 /**
  * Base esbuild config shared by all frameworks
+ * @type {import('bun').BuildConfig}
  */
-export const baseEsbuildConfig = {
-	bundle: true,
+export const baseBuildConfig = {
 	format: "esm",
-	target: "es2020",
-	write: false,
-	logLevel: "warning",
+	target: "browser",
+	minify: false,
+	packages: "external",
 };
 
 /**
@@ -31,18 +30,36 @@ export async function compileIslandWithConfig({
 	outputPath,
 	frameworkConfig,
 }) {
-	const virtualEntry = createVirtualEntry(sourcePath);
+	const absoluteSourceDir = resolve(dirname(sourcePath));
+	const absoluteSourcePath = resolve(sourcePath);
+	const virtualEntryPath = resolve(absoluteSourceDir, basename(outputPath));
+	const virtualEntryContent = createVirtualEntry(absoluteSourcePath);
 
-	const result = await esbuild.build({
-		stdin: {
-			contents: virtualEntry,
-			resolveDir: dirname(sourcePath),
-			loader: "js",
-		},
-		...baseEsbuildConfig,
-		outfile: outputPath,
-		...frameworkConfig,
-	});
+	try {
+		const result = await Bun.build({
+			entrypoints: [virtualEntryPath],
+			files: {
+				[virtualEntryPath]: virtualEntryContent,
+			},
+			root: absoluteSourceDir,
+			outdir: dirname(resolve(outputPath)),
+			...baseBuildConfig,
+			...frameworkConfig,
+		});
 
-	return writeBuildOutput(result, outputPath);
+		if (!result.success) {
+			const errorDetails = result.logs
+				.map((log) => `${log.level}: ${log.message}`)
+				.join("\n");
+			throw new Error(`Island build failed:\n${errorDetails}`);
+		}
+
+		const cssOutputPath = result.outputs.find((output) =>
+			output.path.endsWith(".css"),
+		)?.path;
+
+		return { cssOutputPath };
+	} catch (err) {
+		console.info(styleText("red", "Island build failed: "), err);
+	}
 }

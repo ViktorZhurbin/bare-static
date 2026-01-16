@@ -1,54 +1,53 @@
 {
-	"name": "@vktrz/reef",
-	"version": "1.0.4",
-	"description": "Minimal markdown to HTML static site generator",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/ViktorZhurbin/reef.git",
-		"directory": "packages/core"
-	},
-	"type": "module",
-	"engines": {
-		"node": ">=24.0.0"
-	},
-	"bin": {
-		"reef": "./bin/reef"
-	},
-	"files": [
-		"bin/",
-		"lib/"
-	],
-	"scripts": {
-		"prepublishOnly": "cp ../../README.md ."
-	},
-	"dependencies": {
-		"gray-matter": "^4.0.3",
-		"marked": "^12.0.0",
-		"polka": "^0.5.2",
-		"preact": "^10.28.0",
-		"preact-custom-element": "^4.6.0",
-		"preact-render-to-string": "^6.5.12",
-		"sirv": "^3.0.2",
-		"solid-js": "^1.9.10",
-		"solid-element": "^1.8.0"
-	},
-	"devDependencies": {
-		"@babel/core": "^7.28.5",
-		"@babel/plugin-transform-react-jsx": "^7.27.1",
-		"@babel/preset-typescript": "^7.28.5",
-		"babel-preset-solid": "^1.9.10",
-		"esbuild": "^0.27.2"
-	},
-	"keywords": [
-		"minimal",
-		"static-site-generator",
-		"ssg",
-		"documentation",
-		"website",
-		"blog",
-		"islands",
-		"preact",
-		"solid",
-		"web-components"
-	]
+  "name": "@vktrz/reef",
+  "version": "1.0.4",
+  "description": "Minimal markdown to HTML static site generator",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ViktorZhurbin/reef.git",
+    "directory": "packages/core"
+  },
+  "type": "module",
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "bin": {
+    "reef": "./bin/reef"
+  },
+  "files": [
+    "bin/",
+    "lib/"
+  ],
+  "scripts": {
+    "prepublishOnly": "cp ../../README.md ."
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "hono": "^4.11.4",
+    "marked": "^12.0.0",
+    "preact": "^10.28.0",
+    "preact-custom-element": "^4.6.0",
+    "preact-render-to-string": "^6.5.12",
+    "solid-js": "^1.9.10",
+    "solid-element": "^1.8.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/plugin-transform-react-jsx": "^7.27.1",
+    "@babel/preset-typescript": "^7.28.5",
+    "babel-preset-solid": "^1.9.10",
+    "@types/bun": "latest"
+  },
+  "keywords": [
+    "minimal",
+    "static-site-generator",
+    "ssg",
+    "documentation",
+    "website",
+    "blog",
+    "islands",
+    "preact",
+    "solid",
+    "web-components"
+  ]
 }
