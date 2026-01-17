@@ -1,4 +1,4 @@
-import { access, mkdir, readdir } from "node:fs/promises";
+import { access, glob, mkdir } from "node:fs/promises";
 import { basename, join } from "node:path";
 import { styleText } from "node:util";
 import { getElementName } from "./get-element-name.js";
@@ -9,22 +9,13 @@ import { getElementName } from "./get-element-name.js";
 
 /**
  * Process JSX island files - compile and register as web components
- * Generic helper for islands plugins to discover, compile, and track components
  *
  * @param {Object} options - Processing options
  * @param {string} options.islandsDir - Directory containing JSX island files
  * @param {string} options.outputDir - Build output directory
- * @param {string} options.elementSuffix - Suffix for custom element names (e.g., '-preact', '-solid')
- * @param {Function} options.compileIsland - Compiler function that takes {sourcePath, outputPath, elementName}
+ * @param {string} options.elementSuffix - Suffix for custom element names
+ * @param {Function} options.compileIsland - Compiler function
  * @returns {Promise<IslandComponent[]>} Array of discovered components
- *
- * @example
- * const components = await processJSXIslands({
- *   islandsDir: 'islands-preact',
- *   outputDir: 'dist',
- *   elementSuffix: '-preact',
- *   compileIsland: compilePreactIsland
- * })
  */
 export async function processJSXIslands({
 	islandsDir,
@@ -33,13 +24,9 @@ export async function processJSXIslands({
 	compileIsland,
 }) {
 	const OUTPUT_COMPONENTS_DIR = "components";
-	/** @type {IslandComponent[]} */
-	const discoveredComponents = [];
-	/** @type {{ sourcePath: string, elementName: string }[]} */
-	const compiledIslands = [];
 
 	try {
-		// Check if islands directory exists
+		// 1. Check if islands directory exists
 		await access(islandsDir);
 	} catch (err) {
 		if (err.code === "ENOENT") {
@@ -52,24 +39,22 @@ export async function processJSXIslands({
 		throw err;
 	}
 
-	try {
-		const files = await readdir(islandsDir);
-		const jsxFiles = files.filter((f) => /\.[jt]sx$/.test(f));
+	// 2. Prepare output directory
+	const outputComponentsDir = join(outputDir, OUTPUT_COMPONENTS_DIR);
+	await mkdir(outputComponentsDir, { recursive: true });
 
-		if (jsxFiles.length === 0) return [];
-
-		const outputComponentsDir = join(outputDir, OUTPUT_COMPONENTS_DIR);
-		await mkdir(outputComponentsDir, { recursive: true });
-
-		for (const fileName of jsxFiles) {
+	// 3. Glob files and process them using Array.fromAsync
+	// This iterates over the glob generator and runs the async mapper for each file
+	const results = await Array.fromAsync(
+		glob(join(islandsDir, "**/*.{jsx,tsx}")),
+		async (sourcePath) => {
+			const fileName = basename(sourcePath);
 			const elementName = getElementName(fileName, elementSuffix);
 			const outputFileName = `${elementName}.js`;
+			const outputPath = join(outputComponentsDir, outputFileName);
 
 			try {
-				const sourcePath = join(islandsDir, fileName);
-				const outputPath = join(outputComponentsDir, outputFileName);
-
-				const result = await compileIsland({
+				const compilationResult = await compileIsland({
 					sourcePath,
 					outputPath,
 					elementName,
@@ -82,40 +67,44 @@ export async function processJSXIslands({
 				};
 
 				// Add CSS path if it exists
-				if (result?.cssOutputPath) {
-					const cssFileName = basename(result.cssOutputPath);
+				if (compilationResult?.cssOutputPath) {
+					const cssFileName = basename(compilationResult.cssOutputPath);
 					component.cssPath = `/${OUTPUT_COMPONENTS_DIR}/${cssFileName}`;
 				}
 
-				discoveredComponents.push(component);
-				compiledIslands.push({ sourcePath, elementName });
+				// Return both the public component data and internal logging metadata
+				return {
+					component,
+					logMeta: { sourcePath, elementName },
+				};
 			} catch (err) {
 				throw new Error(`Failed to process island ${fileName}: ${err.message}`);
 			}
-		}
+		},
+	);
 
-		// Log compiled islands
-		if (compiledIslands.length > 0) {
+	// 4. Separate results for Logging and Return
+	const discoveredComponents = results.map((r) => r.component);
+	const compiledLog = results.map((r) => r.logMeta);
+
+	// 5. Log results (Preserving original format)
+	if (compiledLog.length > 0) {
+		console.info(
+			styleText(
+				"green",
+				`✓ Compiled ${compiledLog.length} island${
+					compiledLog.length > 1 ? "s" : ""
+				}:`,
+			),
+		);
+		for (const { sourcePath, elementName } of compiledLog) {
 			console.info(
-				styleText(
-					"green",
-					`✓ Compiled ${compiledIslands.length} island${
-						compiledIslands.length > 1 ? "s" : ""
-					}:`,
-				),
+				`  ${styleText("cyan", sourcePath)} → ${styleText(
+					"magenta",
+					`<${elementName}>`,
+				)}`,
 			);
-			for (const { sourcePath, elementName } of compiledIslands) {
-				console.info(
-					`  ${styleText("cyan", sourcePath)} → ${styleText(
-						"magenta",
-						`<${elementName}>`,
-					)}`,
-				);
-			}
 		}
-	} catch (err) {
-		if (err.code === "ENOENT") return [];
-		throw err;
 	}
 
 	return discoveredComponents;

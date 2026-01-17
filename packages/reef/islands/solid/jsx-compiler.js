@@ -34,11 +34,6 @@ export async function compileJSXIsland({
 	outputPath,
 	elementName,
 }) {
-	/**
-	 * Now the virtual entry is extremely clean.
-	 * We just import the component normally; esbuild will use the
-	 * plugin above to transform it during the "bundle" phase.
-	 */
 	const virtualEntry = `
     import { customElement, noShadowDOM } from 'solid-element';
     import Component from './${basename(sourcePath)}';

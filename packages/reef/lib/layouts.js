@@ -1,4 +1,4 @@
-import { access, mkdir, readdir, rm } from "node:fs/promises";
+import { access, glob, mkdir, rm } from "node:fs/promises";
 import { basename, extname, join } from "node:path";
 import { styleText } from "node:util";
 import { LAYOUTS_DIR } from "../constants/dir.js";
@@ -16,9 +16,6 @@ const TEMP_DIR = createTempDirPath("layouts");
  * @returns {Promise<Map<string, LayoutComponent>>} Map of layout name to render function
  */
 export async function loadLayouts() {
-	/** @type {Map<string, LayoutComponent>} */
-	const layouts = new Map();
-
 	// Check if layouts directory exists
 	try {
 		await access(LAYOUTS_DIR);
@@ -31,43 +28,47 @@ export async function loadLayouts() {
 		throw err;
 	}
 
-	// Discover layout files
-	const files = await readdir(LAYOUTS_DIR);
-	const layoutFiles = files.filter((f) => /\.[jt]sx$/.test(f));
+	// Ensure a clean temp dir
+	await rm(TEMP_DIR, { recursive: true, force: true });
+	await mkdir(TEMP_DIR, { recursive: true });
 
-	if (layoutFiles.length === 0) {
+	// Process layouts concurrently using Array.fromAsync + glob
+	const layoutEntries = await Array.fromAsync(
+		glob(join(LAYOUTS_DIR, "**/*.{jsx,tsx}")),
+		async (sourceFilePath) => {
+			const fileName = basename(sourceFilePath);
+			const layoutName = basename(fileName, extname(fileName));
+
+			try {
+				const tempPath = join(TEMP_DIR, `${layoutName}.mjs`);
+
+				// Compile and load layout module
+				await compileJSX(sourceFilePath, tempPath);
+				const layoutModule = await loadCompiledModule(tempPath);
+
+				if (!layoutModule.default) {
+					throw new Error(
+						`Layout ${fileName} must have a default export function`,
+					);
+				}
+
+				// Return as a [key, value] pair for Map construction
+				return [layoutName, layoutModule.default];
+			} catch (err) {
+				throw new Error(`Failed to load layout ${fileName}: ${err.message}`);
+			}
+		},
+	);
+
+	// Validate results
+	if (layoutEntries.length === 0) {
 		throw new Error(
 			`No layout files found in ${LAYOUTS_DIR}\nCreate at least default.jsx`,
 		);
 	}
 
-	// Clean and recreate temp directory
-	await rm(TEMP_DIR, { recursive: true, force: true });
-	await mkdir(TEMP_DIR, { recursive: true });
-
-	// Compile and load each layout
-	for (const fileName of layoutFiles) {
-		const layoutName = basename(fileName, extname(fileName));
-
-		try {
-			const sourceFilePath = join(LAYOUTS_DIR, fileName);
-			const tempPath = join(TEMP_DIR, `${layoutName}.mjs`);
-
-			// Compile and load layout module
-			await compileJSX(sourceFilePath, tempPath);
-			const layoutModule = await loadCompiledModule(tempPath);
-
-			if (!layoutModule.default) {
-				throw new Error(
-					`Layout ${fileName} must have a default export function`,
-				);
-			}
-
-			layouts.set(layoutName, layoutModule.default);
-		} catch (err) {
-			throw new Error(`Failed to load layout ${fileName}: ${err.message}`);
-		}
-	}
+	/** @type {Map<string, LayoutComponent>} */
+	const layouts = new Map(layoutEntries);
 
 	console.info(
 		styleText("green", "✓ Loaded layouts:"),
