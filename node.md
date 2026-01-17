@@ -1,32 +1,34 @@
       48 packages/reef/lib/inject-assets.js
       45 packages/reef/lib/layouts-registry.js
-      49 packages/reef/lib/build-md-page.js
-      56 packages/reef/lib/collect-assets.js
+      50 packages/reef/lib/build-md-page.js
+      59 packages/reef/lib/collect-assets.js
        3 packages/reef/lib/live-reload/constants.js
       25 packages/reef/lib/live-reload/script.js
       54 packages/reef/lib/builder-shell.js
-      73 packages/reef/lib/reef-resolver.js
+      74 packages/reef/lib/reef-resolver.js
        4 packages/reef/lib/plugins.js
       64 packages/reef/lib/layout-helpers.js
        3 packages/reef/lib/build.js
-      67 packages/reef/lib/build-jsx-page.js
-      24 packages/reef/lib/config-loader.js
-      71 packages/reef/lib/layouts.js
-     138 packages/reef/lib/dev.js
-      24 packages/reef/lib/write-html-page.js
-     103 packages/reef/lib/builder.js
+      74 packages/reef/lib/build-jsx-page.js
+      23 packages/reef/lib/config-loader.js
+      83 packages/reef/lib/layouts.js
+     129 packages/reef/lib/dev.js
+      27 packages/reef/lib/write-html-page.js
+     115 packages/reef/lib/builder.js
       27 packages/reef/lib/extract-jsx-meta.js
       76 packages/reef/islands/solid/index.js
-      74 packages/reef/islands/solid/jsx-compiler.js
+      75 packages/reef/islands/solid/jsx-compiler.js
       80 packages/reef/islands/preact/index.js
-      48 packages/reef/islands/preact/jsx-compiler.js
+      45 packages/reef/islands/preact/jsx-compiler.js
       23 packages/reef/utils/generate-script-tag.js
       26 packages/reef/utils/get-element-name.js
        1 packages/reef/utils/format.js
       27 packages/reef/utils/filter-used-components.js
        7 packages/reef/utils/index.js
-      31 packages/reef/utils/write-build-output.js
+      27 packages/reef/utils/write-build-output.js
+       5 packages/reef/utils/dir.js
       24 packages/reef/utils/detect-custom-elements.js
       58 packages/reef/utils/generate-tags-for-used-components.js
-     117 packages/reef/utils/process-jsx-islands.js
-    1470 total
+     122 packages/reef/utils/process-jsx-islands.js
+      43 packages/reef/utils/jsx-compiler.js
+    1546 total
