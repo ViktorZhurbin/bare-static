@@ -1,4 +1,6 @@
-// Test JSX page with layout support
+// TODO: css doesn't work
+import "./index.css"
+
 export const meta = {
 	layout: "default",
 	title: "About Reef",

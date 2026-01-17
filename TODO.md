@@ -6,19 +6,6 @@ Build reef's docs site with reef (dogfooding)
 
 Then: Clean up based on real usage pain points
 
-## 🔬 Research & Learning
-
-### Explore Similar Projects
-
-- Astro 
-- 11ty
-- SolidStart, SvelteKit - DX, conventions, approach to SSG 
-- Fresh (Deno) - Islands without build step
-- Lume - Modern 11ty-style SSG with JSX
-- Lit - Native web components reactivity
-- Vite, esbuild, Parcel - for plugin architecture 
-
-
 ## 🏗️ Core Architecture
 
 ### Code Organization
@@ -40,10 +27,10 @@ Then: Clean up based on real usage pain points
 
 ---
 
-### Refactoring 
+### Refactoring
 - use import.meta
 
-1. Getting Current File Path (Most Useful)
+#### 1. Getting Current File Path (Most Useful)
 Current approach:
 import { fileURLToPath } from "node:url";
 import path from "node:path";
@@ -60,17 +47,22 @@ Where in Reef:
 lib/dev.js - loading live-reload.js
 lib/layouts.js - temp directory handling
 Any file that needs to know "where am I?"
-2. Import Resolution
+
+#### 2. Import Resolution
 Current approach:
 import { pathToFileURL } from "node:url";
 
 const moduleUrl = pathToFileURL(tempPath).href;
 const module = await import(`${moduleUrl}?t=${Date.now()}`);
+
 With import.meta.resolve (Node 20.6+):
+
 const moduleUrl = import.meta.resolve(tempPath);
 const module = await import(`${moduleUrl}?t=${Date.now()}`);
+
 Simpler, but honestly not a huge win.
-3. Cache Busting (What You Already Do)
+
+#### 3. Cache Busting (What You Already Do)
 // You already do this correctly:
 await import(`${moduleUrl}?t=${Date.now()}`);
 
@@ -97,6 +89,7 @@ layouts.js (temp director
   };
   ```
 - [ ] Implement data cascade: default > reef.js > metadata
+- [ ] Support CSS imports!
 - [ ] Pass all metadata fields as props to layout
 - [ ] Detect full-page vs content-only (warn if layout + )
 
@@ -118,6 +111,19 @@ Alternative: Build custom ReefIsland if is-land feels limiting
 
 - [ ] reef create <project-name> CLI command (scaffold new projects)
 - [ ] Improved dev server logging (clearer rebuild messages)
+
+
+## 🔬 Research & Learning
+
+### Explore Similar Projects
+
+- Astro
+- 11ty
+- SolidStart, SvelteKit - DX, conventions, approach to SSG
+- Fresh (Deno) - Islands without build step
+- Lume - Modern 11ty-style SSG with JSX
+- Lit - Native web components reactivity
+- Vite, esbuild, Parcel - for plugin architecture
 
 ## 📚 Documentation
 
