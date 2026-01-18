@@ -61,9 +61,11 @@ export async function startDevServer() {
 		const watcher = watch(PAGES_DIR, { recursive: true });
 
 		for await (const event of watcher) {
-			const filePath = join(PAGES_DIR, event.filename);
+			if (event.filename) {
+				const filePath = join(PAGES_DIR, event.filename);
 
-			logFileChanged(filePath);
+				logFileChanged(filePath);
+			}
 
 			if (event.filename?.endsWith(".md")) {
 				await buildMdPage(event.filename, {
@@ -105,7 +107,9 @@ export async function startDevServer() {
 						notifyReload();
 					}
 				}
-			} catch (err) {
+			} catch (e) {
+				const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 				// Directory doesn't exist yet, that's fine
 				if (err.code !== "ENOENT") {
 					console.warn(`Could not watch ${dir}:`, err.message);

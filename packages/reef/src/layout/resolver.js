@@ -63,7 +63,9 @@ async function findReefData(filePath) {
 			if (reefModule.default) {
 				return reefModule.default;
 			}
-		} catch (err) {
+		} catch (e) {
+			const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 			// If the file simply doesn't exist, that's fine. Continue.
 			if (err.code === "ENOENT") {
 				// Continue to next iteration

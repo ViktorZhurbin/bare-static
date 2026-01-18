@@ -2,7 +2,7 @@ import { readFile } from "node:fs/promises";
 import { styleText } from "node:util";
 import matter from "gray-matter";
 import { marked } from "marked";
-import render from "preact-render-to-string";
+import { renderToString } from "preact-render-to-string";
 import { layouts } from "../layout/registry.js";
 import { resolveLayout } from "../layout/resolver.js";
 import { builderShell } from "./builder-shell.js";
@@ -36,14 +36,14 @@ export async function buildMdPage(sourceFileName, options = {}) {
 		}
 
 		const title = meta.title || sourceFileName.replace(".md", "");
-		const contentHtml = marked(markdown);
+		const contentHtml = await marked(markdown);
 		const layoutVNode = layoutFn({
 			title,
 			content: contentHtml,
 			...meta,
 		});
 
-		const layoutHtml = render(layoutVNode);
+		const layoutHtml = renderToString(layoutVNode);
 
 		await writeHtmlPage(layoutHtml, outputFilePath);
 	});

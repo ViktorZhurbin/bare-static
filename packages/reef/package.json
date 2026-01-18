@@ -19,7 +19,8 @@
 		"lib/"
 	],
 	"scripts": {
-		"prepublishOnly": "cp ../../README.md ."
+		"prepublishOnly": "cp ../../README.md .",
+		"type-check": "tsc"
 	},
 	"dependencies": {
 		"gray-matter": "^4.0.3",
@@ -29,15 +30,17 @@
 		"preact-custom-element": "^4.6.0",
 		"preact-render-to-string": "^6.5.12",
 		"sirv": "^3.0.2",
-		"solid-js": "^1.9.10",
-		"solid-element": "^1.8.0"
+		"solid-element": "^1.8.0",
+		"solid-js": "^1.9.10"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.28.5",
 		"@babel/plugin-transform-react-jsx": "^7.27.1",
 		"@babel/preset-typescript": "^7.28.5",
+		"@types/node": "^25.0.9",
 		"babel-preset-solid": "^1.9.10",
-		"esbuild": "^0.27.2"
+		"esbuild": "^0.27.2",
+		"typescript": "^5.9.3"
 	},
 	"keywords": [
 		"minimal",

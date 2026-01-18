@@ -44,7 +44,9 @@ export async function builderShell(
 					styleText("gray", ` (${buildTime})`),
 			);
 		}
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		console.error(
 			styleText("red", `✗ Failed to build ${sourceFileName}:`),
 			err.message,

@@ -6,6 +6,7 @@
  */
 
 // Preact initialization - register handler for type="preact"
+// @ts-expect-error: is-land is loaded at runtime from CDN
 Island.addInitType("preact", async (target) => {
 	const { createElement: h, render } = await import("preact");
 	const module = await import(target.getAttribute("import"));
@@ -16,6 +17,7 @@ Island.addInitType("preact", async (target) => {
 });
 
 // Solid.js initialization - register handler for type="solid"
+// @ts-expect-error: is-land is loaded at runtime from CDN
 Island.addInitType("solid", async (target) => {
 	const { render } = await import("solid-js/web");
 	const module = await import(target.getAttribute("import"));

@@ -22,7 +22,9 @@ export async function loadLayouts() {
 	// Check if layouts directory exists
 	try {
 		await access(LAYOUTS_DIR);
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		if (err.code === "ENOENT") {
 			throw new Error(
 				`Layouts directory not found: ${LAYOUTS_DIR}\nCreate it and add at least default.jsx`,
@@ -55,7 +57,9 @@ export async function loadLayouts() {
 				}
 
 				layouts.set(layoutName, layoutModule.default);
-			} catch (err) {
+			} catch (e) {
+				const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 				throw new Error(`Failed to load layout ${fileName}: ${err.message}`);
 			}
 		},

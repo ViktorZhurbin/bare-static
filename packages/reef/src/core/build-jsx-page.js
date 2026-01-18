@@ -1,6 +1,6 @@
 import { basename, extname, join } from "node:path";
 import { styleText } from "node:util";
-import render from "preact-render-to-string";
+import { renderToString } from "preact-render-to-string";
 import { layouts } from "../layout/registry.js";
 import { resolveLayout } from "../layout/resolver.js";
 import { compileJSX } from "../utils/compile-jsx.js";
@@ -55,7 +55,7 @@ export async function buildJSXPage(sourceFileName, options = {}) {
 			}
 
 			const title = meta.title || sourceFileName.replace(/\.[jt]sx$/, "");
-			const contentHtml = render(contentVNode);
+			const contentHtml = renderToString(contentVNode);
 
 			layoutVNode = layoutFn({
 				title,
@@ -64,7 +64,7 @@ export async function buildJSXPage(sourceFileName, options = {}) {
 			});
 		}
 
-		const layoutHtml = render(layoutVNode);
+		const layoutHtml = renderToString(layoutVNode);
 
 		await writeHtmlPage(layoutHtml, outputFilePath);
 	});

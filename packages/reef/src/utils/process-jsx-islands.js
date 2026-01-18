@@ -29,7 +29,9 @@ export async function processJSXIslands({
 	try {
 		// 1. Check if islands directory exists
 		await access(islandsDir);
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		if (err.code === "ENOENT") {
 			console.warn(
 				styleText("red", `Islands directory not found:`),
@@ -78,7 +80,9 @@ export async function processJSXIslands({
 
 				discoveredComponents.push(component);
 				compiledIslands.push({ sourcePath, elementName });
-			} catch (err) {
+			} catch (e) {
+				const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 				throw new Error(`Failed to process island ${fileName}: ${err.message}`);
 			}
 		},

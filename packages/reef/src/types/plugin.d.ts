@@ -37,7 +37,7 @@ export interface Asset {
 	/** Tag name (script or link) */
 	tag: "script" | "link";
 	/** Tag attributes */
-	attrs: Record<string, string>;
+	attrs: Record<string, string | undefined>;
 	/** Inline content (for script tags) */
 	content?: string;
 }

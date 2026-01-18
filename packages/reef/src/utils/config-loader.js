@@ -16,7 +16,9 @@ export async function loadConfig() {
 		const configUrl = pathToFileURL(CONFIG_FILE).href;
 		const config = await import(configUrl);
 		return config.default;
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		if (err.code === "ENOENT") return null; // No config file, that's fine
 		throw new Error(`Failed to load config: ${err.message}`);
 	}

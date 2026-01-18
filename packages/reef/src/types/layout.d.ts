@@ -1,6 +1,4 @@
-/**
- * Layout meta and frontmatter type definitions
- */
+import type { VNode } from "preact";
 
 /**
  * Meta data parsed from pages
@@ -31,4 +29,4 @@ export interface LayoutProps {
 /**
  * Layout component function type
  */
-export type LayoutComponent = (props: LayoutProps) => unknown;
+export type LayoutComponent = (props: LayoutProps) => VNode;

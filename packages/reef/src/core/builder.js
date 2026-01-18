@@ -25,7 +25,9 @@ export async function buildAll(options = {}) {
 	// Copy public directory to output if it exists
 	try {
 		await cp(PUBLIC_DIR, OUTPUT_DIR, { recursive: true });
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		// Silently skip if public directory doesn't exist
 		if (err.code !== "ENOENT") {
 			throw err;
@@ -75,7 +77,9 @@ export async function buildAll(options = {}) {
 				}
 			},
 		);
-	} catch (err) {
+	} catch (e) {
+		const err = /** @type {NodeJS.ErrnoException} */ (e);
+
 		// Directory doesn't exist, return empty array
 		if (err.code === "ENOENT") {
 			return [];

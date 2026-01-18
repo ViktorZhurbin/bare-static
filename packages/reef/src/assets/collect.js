@@ -7,7 +7,7 @@ import { defaultPlugins } from "../plugins/defaultPlugins.js";
  */
 
 /**
- * @import { Asset, ImportMapConfig, ReefPlugin } from '../types/plugin.js';
+ * @import { Asset, ImportMapConfig } from '../types/plugin.js';
  */
 
 /**
